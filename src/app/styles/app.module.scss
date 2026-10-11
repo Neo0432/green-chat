@@ -1,0 +1,9 @@
+.app {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+
+  &__title {
+    @include heading-24-32-medium-normal;
+  }
+}

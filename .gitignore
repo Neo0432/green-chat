@@ -15,7 +15,6 @@ coverage
 .env.*
 !.env.example
 !.env.development
-!.env.test
 
 # Project docs (local only)
 docs/
@@ -31,3 +30,6 @@ docs/
 *.njsproj
 *.sln
 *.sw?
+
+# Claude Code
+.claude/settings.local.json

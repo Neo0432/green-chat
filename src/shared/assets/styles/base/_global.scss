@@ -1,0 +1,25 @@
+@use '../mixins/mixins' as *;
+
+body {
+  isolation: isolate;
+
+  min-height: 100dvh;
+
+  font-family: var(--font-family-base);
+  font-synthesis: none;
+  color: var(--color-text);
+  text-rendering: optimizelegibility;
+
+  background-color: var(--color-background);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @include body-16-24-regular-normal;
+}
+
+:where(a, button, input, textarea, select, [tabindex]) {
+  @include focus-visible {
+    outline-color: var(--color-primary);
+  }
+}

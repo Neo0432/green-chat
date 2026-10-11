@@ -1,0 +1,53 @@
+{
+  "extends": ["stylelint-config-standard-scss", "stylelint-config-clean-order"],
+  "rules": {
+    "color-no-hex": [
+      true,
+      {
+        "message": "Raw colors only in _variables.scss as CSS-variables. Hex hardcode — prohibited."
+      }
+    ],
+    "selector-class-pattern": [
+      "^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$",
+      {
+        "message": "Class must be in BEM/kebab-case: block__element--modifier"
+      }
+    ],
+    "custom-property-pattern": [
+      "^_?[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      {
+        "message": "Custom property must be kebab-case: --public-name, or --_private-name for one used only inside its own file"
+      }
+    ],
+    "scss/dollar-variable-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+    "scss/at-mixin-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+    "scss/percent-placeholder-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+    "declaration-property-value-no-unknown": true,
+    "no-descending-specificity": null,
+    "scss/no-global-function-names": null,
+    "custom-property-empty-line-before": null,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["export"]
+      }
+    ],
+    "at-rule-empty-line-before": [
+      "always",
+      {
+        "ignore": ["first-nested", "blockless-after-same-name-blockless", "after-comment"],
+        "ignoreAtRules": ["else"],
+        "severity": "warning"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["src/shared/assets/styles/base/_variables.scss", "src/shared/assets/styles/base/_reset.scss"],
+      "rules": {
+        "color-no-hex": null
+      }
+    }
+  ],
+  "ignoreFiles": ["dist/**/*", "coverage/**/*", "node_modules/**/*"]
+}

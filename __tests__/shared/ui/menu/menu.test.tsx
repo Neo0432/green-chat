@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { Menu } from '@shared/ui/menu';
 import { Modal } from '@shared/ui/modal';
+
+type User = ReturnType<typeof userEvent.setup>;
 
 const renderMenu = () => {
   const user = userEvent.setup();
@@ -224,5 +227,75 @@ describe('Menu', () => {
     await user.keyboard('{Escape}');
 
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+  describe('opening a dialog from an item', () => {
+    const MenuOpensModal = () => {
+      const [isModalOpen, setIsModalOpen] = useState(false);
+
+      return (
+        <>
+          <Menu
+            items={[{ label: 'Log out', tone: 'danger', onSelect: () => setIsModalOpen(true) }]}
+            renderTrigger={(triggerProps) => (
+              <button type="button" {...triggerProps}>
+                Open menu
+              </button>
+            )}
+          />
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            title="Log out of green-chat?"
+            footer={
+              <button type="button" onClick={() => setIsModalOpen(false)}>
+                Cancel
+              </button>
+            }
+          >
+            Local chat history on this device will be deleted.
+          </Modal>
+        </>
+      );
+    };
+
+    const openDialogFromItem = async (selectWith: 'click' | 'Enter') => {
+      const user = userEvent.setup();
+
+      render(<MenuOpensModal />);
+
+      await user.click(screen.getByRole('button', { name: 'Open menu' }));
+
+      if (selectWith === 'click') {
+        await user.click(screen.getByRole('menuitem', { name: 'Log out' }));
+      } else {
+        await user.keyboard('{Enter}');
+      }
+
+      expect(screen.getByRole('dialog', { name: 'Log out of green-chat?' })).toBeInTheDocument();
+
+      return user;
+    };
+
+    it.each([
+      ['Escape', async (user: User) => user.keyboard('{Escape}')],
+      ['a click on the backdrop', async (user: User) => user.click(screen.getByRole('presentation'))],
+      ['the Cancel button', async (user: User) => user.click(screen.getByRole('button', { name: 'Cancel' }))],
+    ])('returns the focus to the menu trigger when the dialog is closed with %s', async (_, close) => {
+      const user = await openDialogFromItem('click');
+
+      await close(user);
+
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Open menu' })).toHaveFocus();
+    });
+
+    it('returns the focus to the menu trigger when the item was selected with the keyboard', async () => {
+      const user = await openDialogFromItem('Enter');
+
+      await user.keyboard('{Escape}');
+
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Open menu' })).toHaveFocus();
+    });
   });
 });

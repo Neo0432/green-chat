@@ -119,6 +119,8 @@ export const Menu = ({ items, caption, renderTrigger, className }: MenuProps) =>
   };
 
   const handleSelect = (item: MenuItem) => {
+    // Before the action runs: a dialog it opens must see the trigger, not this item, as the previously focused element.
+    triggerRef.current?.focus();
     setIsOpen(false);
     item.onSelect();
   };

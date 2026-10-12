@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -299,5 +299,54 @@ describe('Modal', () => {
 
     await user.tab();
     expect(screen.getByRole('textbox', { name: 'Phone number' })).toHaveFocus();
+  });
+  it('does not take the focus back from a control the consumer focused on purpose', async () => {
+    const user = userEvent.setup();
+
+    const Harness = () => {
+      const [isOpen, setIsOpen] = useState(false);
+      const [shouldFocusComposer, setShouldFocusComposer] = useState(false);
+      const composerRef = useRef<HTMLTextAreaElement>(null);
+
+      useLayoutEffect(() => {
+        if (shouldFocusComposer) {
+          composerRef.current?.focus();
+        }
+      }, [shouldFocusComposer]);
+
+      const handleStartChat = () => {
+        setIsOpen(false);
+        setShouldFocusComposer(true);
+      };
+
+      return (
+        <>
+          <button type="button" onClick={() => setIsOpen(true)}>
+            Open
+          </button>
+          <textarea ref={composerRef} aria-label="Message" />
+          <Modal
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            title="New chat"
+            footer={
+              <button type="button" onClick={handleStartChat}>
+                Start chat
+              </button>
+            }
+          >
+            <input aria-label="Phone number" />
+          </Modal>
+        </>
+      );
+    };
+
+    render(<Harness />);
+
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+    await user.click(screen.getByRole('button', { name: 'Start chat' }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Message' })).toHaveFocus();
   });
 });

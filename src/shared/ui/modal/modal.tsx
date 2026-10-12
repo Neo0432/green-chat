@@ -42,7 +42,8 @@ const ModalDialog = ({ onClose, title, children, footer, className }: ModalDialo
     }
 
     return () => {
-      if (opener instanceof HTMLElement) {
+      // Focus is on <body> when the focused element was inside the dialog. Focus a consumer moved elsewhere stays there.
+      if (opener instanceof HTMLElement && document.activeElement === document.body) {
         opener.focus();
       }
     };

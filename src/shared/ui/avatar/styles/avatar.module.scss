@@ -1,0 +1,37 @@
+$colors: ('red', 'orange', 'violet', 'green', 'cyan', 'blue', 'pink');
+
+.avatar {
+  user-select: none;
+
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  inline-size: var(--_size);
+  block-size: var(--_size);
+  border-radius: 50%;
+
+  color: var(--color-white);
+
+  background: linear-gradient(180deg, var(--_top), var(--_bottom));
+
+  &--54 {
+    --_size: 54px;
+
+    @include heading-20-26-medium-normal;
+  }
+
+  &--42 {
+    --_size: 42px;
+
+    @include body-16-21-medium-normal;
+  }
+
+  @each $color in $colors {
+    &--#{$color} {
+      --_top: var(--avatar-#{$color}-top);
+      --_bottom: var(--avatar-#{$color}-bottom);
+    }
+  }
+}

@@ -33,9 +33,10 @@ describe('getInitials', () => {
     expect(getInitials('🔥Alice')).toBe('A');
   });
 
-  it('contributes nothing for a word without letters or digits', () => {
+  it('skips words without letters or digits', () => {
     expect(getInitials('🔥 Fire')).toBe('F');
-    expect(getInitials('Alice 🔥 Smith')).toBe('A');
+    expect(getInitials('Alice 🔥 Smith')).toBe('AS');
+    expect(getInitials('- Alice & Smith')).toBe('AS');
   });
 
   it.each(['', '   ', '🔥', '---', '🔥 ✨'])('returns "?" for the title "%s" without letters or digits', (title) => {

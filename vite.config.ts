@@ -2,7 +2,10 @@ import { rmSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
-import { defineConfig, normalizePath, type Plugin } from 'vite';
+import { defineConfig, loadEnv, normalizePath, type Plugin, type ProxyOptions } from 'vite';
+
+import { GREEN_API_PROXY_PATH } from './src/shared/config/green-api-proxy.ts';
+import { parseEnv } from './src/shared/config/parse-env.ts';
 
 const resolvePath = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
@@ -37,7 +40,24 @@ const excludeMswWorker = (): Plugin => {
   };
 };
 
-export default defineConfig({
+/** Lets the browser reach GREEN-API from the same origin when the API host does not allow CORS (R1). */
+const createGreenApiProxy = (mode: string): Record<string, ProxyOptions> | undefined => {
+  const { greenApiProxyTarget } = parseEnv(loadEnv(mode, process.cwd(), 'VITE_'));
+
+  if (greenApiProxyTarget === null) {
+    return undefined;
+  }
+
+  return {
+    [GREEN_API_PROXY_PATH]: {
+      target: greenApiProxyTarget,
+      changeOrigin: true,
+      rewrite: (path) => path.slice(GREEN_API_PROXY_PATH.length),
+    },
+  };
+};
+
+export default defineConfig(({ mode }) => ({
   plugins: [react(), excludeMswWorker()],
 
   resolve: { alias },
@@ -63,5 +83,10 @@ export default defineConfig({
   server: {
     port: 3000,
     strictPort: true,
+    proxy: createGreenApiProxy(mode),
   },
-});
+
+  preview: {
+    proxy: createGreenApiProxy(mode),
+  },
+}));

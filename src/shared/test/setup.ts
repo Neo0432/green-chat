@@ -6,7 +6,7 @@ import { server } from './msw/server';
 
 // `import.meta.env` does not exist in Jest (CJS), so the only module reading it is replaced.
 jest.mock('@shared/config/env', () => ({
-  ENV: { enableApiMocks: false } satisfies typeof ENV,
+  ENV: { enableApiMocks: false, greenApiProxyTarget: null } satisfies typeof ENV,
 }));
 
 beforeAll(() => {

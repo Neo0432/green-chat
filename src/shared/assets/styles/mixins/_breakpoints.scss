@@ -1,10 +1,8 @@
 @use 'sass:map';
 
 $breakpoint-sizes: (
-  'mobile-m': 375px,
-  'tablet': 768px,
-  'laptop-s': 1024px,
-  'laptop-m': 1200px,
+  'two-columns': 600px,
+  'full-sidebar': 900px,
 );
 
 @function get-breakpoint($name) {

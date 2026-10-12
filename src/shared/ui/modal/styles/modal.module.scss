@@ -1,0 +1,69 @@
+.modal {
+  position: fixed;
+  z-index: var(--index-modal);
+  inset: 0;
+
+  display: grid;
+  place-items: center;
+
+  background-color: var(--color-backdrop);
+
+  animation: fade-in var(--transition);
+
+  @include reduced-motion {
+    animation: none;
+  }
+
+  &__dialog {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+
+    inline-size: 400px;
+    max-inline-size: calc(100% - 2 * var(--space-4));
+    max-block-size: calc(100% - 2 * var(--space-4));
+    padding: var(--space-6);
+    border-radius: var(--radius);
+
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-menu);
+
+    animation: scale-in var(--transition);
+
+    @include reduced-motion {
+      animation: none;
+    }
+
+    @include focus-visible {
+      outline: none;
+    }
+  }
+
+  &__title {
+    @include heading-20-26-medium-normal;
+  }
+
+  &__body {
+    margin-block-start: var(--space-4);
+  }
+
+  &__footer {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: flex-end;
+    margin-block-start: var(--space-6);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}

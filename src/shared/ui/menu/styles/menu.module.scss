@@ -1,0 +1,87 @@
+.menu {
+  position: relative;
+  display: inline-block;
+
+  &__dropdown {
+    position: absolute;
+    z-index: var(--index-dropdown);
+    inset-block-start: calc(100% + var(--space-1));
+    inset-inline-start: 0;
+    transform-origin: top left;
+
+    min-inline-size: 220px;
+    max-inline-size: calc(100vw - var(--space-4));
+    padding-block: var(--space-2);
+    border-radius: var(--radius);
+
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-menu);
+
+    animation: appear var(--transition);
+
+    @include reduced-motion {
+      animation: none;
+    }
+
+    @include focus-visible {
+      outline: none;
+    }
+  }
+
+  &__caption {
+    @include body-14-18-regular-normal;
+    @include ellipsis;
+
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-text-secondary);
+  }
+
+  &__item {
+    @include body-15-20-regular-normal;
+
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+
+    inline-size: 100%;
+    block-size: 40px;
+    padding-inline: var(--space-4);
+
+    color: var(--color-text);
+    text-align: start;
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--color-background);
+    }
+
+    @include focus-visible {
+      @include focus-ring(-2px);
+    }
+
+    &--danger {
+      color: var(--color-danger);
+    }
+  }
+
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    color: var(--color-text-secondary);
+  }
+
+  &__item--danger &__icon {
+    color: inherit;
+  }
+
+  &__label {
+    @include ellipsis;
+  }
+}
+
+@keyframes appear {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}

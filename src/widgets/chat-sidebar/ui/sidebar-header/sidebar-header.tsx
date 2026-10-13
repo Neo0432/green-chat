@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { SignOutDialog } from '@features/sign-out';
 
-import { selectCredentials } from '@entities/session';
+import { selectIdInstance } from '@entities/session';
 
 import { SvgLogout, SvgMenu } from '@shared/assets/icons';
 import { ENV } from '@shared/config';
@@ -13,14 +13,14 @@ import { Menu } from '@shared/ui/menu';
 import { getClasses } from './styles/get-classes';
 
 export const SidebarHeader = () => {
-  const idInstance = useAppSelector((state) => selectCredentials(state)?.idInstance);
+  const idInstance = useAppSelector(selectIdInstance);
   const [isSignOutOpen, setIsSignOutOpen] = useState(false);
   const { cnRoot, cnTitle, cnMockPill } = getClasses();
 
   return (
     <header className={cnRoot}>
       <Menu
-        caption={idInstance === undefined ? undefined : `Instance ${idInstance}`}
+        caption={idInstance === null ? undefined : `Instance ${idInstance}`}
         items={[{ label: 'Log out', icon: <SvgLogout />, tone: 'danger', onSelect: () => setIsSignOutOpen(true) }]}
         renderTrigger={(triggerProps) => (
           <IconButton label="Open menu" {...triggerProps}>

@@ -30,7 +30,7 @@
 
   &--fab,
   &--raised {
-    --_size: 54px;
+    --_size: var(--round-button-size);
 
     box-shadow: var(--shadow-composer);
   }

@@ -1,6 +1,7 @@
 import {
   selectCredentials,
   selectForcedSignOut,
+  selectIdInstance,
   selectIsSignedIn,
   sessionActions,
   sessionReducer,
@@ -58,9 +59,11 @@ describe('session slice', () => {
   });
 
   describe('selectors', () => {
-    it('select the credentials, the sign-in flag and the forced sign-out', () => {
+    it('select the credentials, the Instance ID, the sign-in flag and the forced sign-out', () => {
       expect(selectCredentials({ session: SIGNED_IN })).toEqual(CREDENTIALS);
       expect(selectCredentials({ session: SIGNED_OUT })).toBeNull();
+      expect(selectIdInstance({ session: SIGNED_IN })).toBe(CREDENTIALS.idInstance);
+      expect(selectIdInstance({ session: SIGNED_OUT })).toBeNull();
       expect(selectIsSignedIn({ session: SIGNED_IN })).toBe(true);
       expect(selectIsSignedIn({ session: FORCED_OUT })).toBe(false);
       expect(selectForcedSignOut({ session: FORCED_OUT })).toEqual({ idInstance: CREDENTIALS.idInstance });

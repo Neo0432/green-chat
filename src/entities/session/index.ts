@@ -3,6 +3,7 @@ export { getInitialSessionState, startSessionPersistence } from './model/session
 export {
   selectCredentials,
   selectForcedSignOut,
+  selectIdInstance,
   selectIsSignedIn,
   sessionActions,
   sessionReducer,

@@ -1,5 +1,7 @@
 // No `overflow` on the sidebar or its header: the menu dropdown has no portal and would be clipped.
 .chat-sidebar {
+  position: relative;
+
   display: flex;
   flex: 0 0 var(--sidebar-width);
   flex-direction: column;
@@ -8,4 +10,10 @@
   border-inline-end: 1px solid var(--color-border);
 
   background-color: var(--color-surface);
+
+  &__create-chat-button {
+    position: absolute;
+    inset-block-end: var(--space-5);
+    inset-inline-end: var(--space-5);
+  }
 }

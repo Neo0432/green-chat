@@ -1,16 +1,15 @@
 import { ChatSidebar } from '@widgets/chat-sidebar';
+import { ChatWindow } from '@widgets/chat-window';
 
 import { getClasses } from './styles/get-classes';
 
 export const ChatPage = () => {
-  const { cnRoot, cnChatArea, cnPlaceholder } = getClasses();
+  const { cnRoot } = getClasses();
 
   return (
     <div className={cnRoot}>
       <ChatSidebar />
-      <main className={cnChatArea}>
-        <p className={cnPlaceholder}>Select a chat to start messaging</p>
-      </main>
+      <ChatWindow />
     </div>
   );
 };

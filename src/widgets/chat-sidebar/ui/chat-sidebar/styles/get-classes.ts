@@ -6,6 +6,7 @@ const cn = classNames.bind(styles);
 
 export const getClasses = () => {
   const cnRoot = cn('chat-sidebar');
+  const cnCreateChatButton = cn('chat-sidebar__create-chat-button');
 
-  return { cnRoot };
+  return { cnRoot, cnCreateChatButton };
 };

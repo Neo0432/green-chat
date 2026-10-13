@@ -154,11 +154,12 @@ export const quotaExceededNotification = {
   instanceData,
   timestamp: 1763115700,
   quotaData: {
-    method: 'SendMessage',
+    method: 'correspondents',
     used: 3,
     total: 3,
-    status: 'exceeded',
-    description: 'Monthly quota of 3 chats is exhausted',
+    status: 'CORRESPONDENTS_QUOTA_EXCEEDED',
+    description:
+      'The monthly limit of chats has been reached. Messaging is available only with the following chats: 10000000, 10000001, 10000002',
   },
 };
 

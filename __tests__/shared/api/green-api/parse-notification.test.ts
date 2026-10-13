@@ -370,7 +370,7 @@ describe('parseNotification', () => {
     it('parses the description', () => {
       expect(parse(quotaExceededNotification)).toEqual({
         type: 'quota',
-        description: 'Monthly quota of 3 chats is exhausted',
+        description: quotaExceededNotification.quotaData.description,
       });
     });
 

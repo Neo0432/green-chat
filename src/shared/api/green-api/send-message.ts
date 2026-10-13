@@ -1,4 +1,4 @@
-import { isNonEmptyString, isPlainObject } from '@shared/lib/predicates';
+import { isNonEmptyString, isPlainObject } from '@shared/lib';
 
 import { GreenApiError } from './green-api-error';
 import { request } from './request';

@@ -1,4 +1,4 @@
-import { isNonBlankString, isNonEmptyString, isPlainObject } from '@shared/lib/predicates';
+import { isNonBlankString, isNonEmptyString, isPlainObject } from '@shared/lib';
 
 import { isPrivateChatId } from './chat-id';
 import type {

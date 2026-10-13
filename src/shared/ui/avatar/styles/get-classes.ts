@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 
-import type { AvatarColor } from '@shared/lib/avatar';
+import type { AvatarColor } from '@shared/lib';
 
 import type { AvatarProps } from '../avatar';
 

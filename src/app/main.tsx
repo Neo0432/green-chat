@@ -17,9 +17,9 @@ const startMocks = async () => {
     return;
   }
 
-  const { worker } = await import('@shared/test/msw/browser');
+  const { startMockWorker } = await import('@shared/test/msw/browser');
 
-  await worker.start({ onUnhandledRequest: 'bypass' });
+  await startMockWorker();
 };
 
 const rootElement = document.getElementById('root');

@@ -1,4 +1,4 @@
-import { getAvatarColor, getInitials } from '@shared/lib/avatar';
+import { getAvatarColor, getInitials } from '@shared/lib';
 
 import { getClasses } from './styles/get-classes';
 import type { AvatarSize } from './constants';

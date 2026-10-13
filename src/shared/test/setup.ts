@@ -15,7 +15,10 @@ beforeAll(() => {
 });
 
 afterEach(() => {
+  // A test may have blocked the storage; it has to work again before it is emptied.
+  jest.restoreAllMocks();
   server.resetHandlers();
+  window.localStorage.clear();
 });
 
 afterAll(() => {

@@ -1,0 +1,28 @@
+.chat-page {
+  display: flex;
+  block-size: 100dvh;
+
+  &__chat-area {
+    display: grid;
+    flex: 1;
+    place-items: center;
+
+    min-inline-size: 0;
+
+    background-color: var(--wallpaper-1);
+    background-image:
+      radial-gradient(circle at 15% 20%, var(--wallpaper-1) 0%, transparent 55%),
+      radial-gradient(circle at 85% 15%, var(--wallpaper-2) 0%, transparent 55%),
+      radial-gradient(circle at 20% 85%, var(--wallpaper-3) 0%, transparent 55%),
+      radial-gradient(circle at 80% 80%, var(--wallpaper-4) 0%, transparent 55%);
+  }
+
+  &__placeholder {
+    @include body-15-20-medium-normal;
+
+    padding: var(--space-1) 10px;
+    border-radius: var(--radius);
+    color: var(--color-white);
+    background-color: var(--color-date-pill-bg);
+  }
+}

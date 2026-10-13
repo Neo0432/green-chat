@@ -1,11 +1,12 @@
-import { getClasses } from './styles/get-classes';
+import { ChatPage } from '@pages/chat';
+import { LoginPage } from '@pages/login';
+
+import { selectIsSignedIn } from '@entities/session';
+
+import { useAppSelector } from '@shared/lib/redux';
 
 export const App = () => {
-  const { cnRoot, cnTitle } = getClasses();
+  const isSignedIn = useAppSelector(selectIsSignedIn);
 
-  return (
-    <main className={cnRoot}>
-      <h1 className={cnTitle}>green-chat</h1>
-    </main>
-  );
+  return isSignedIn ? <ChatPage /> : <LoginPage />;
 };

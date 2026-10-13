@@ -51,6 +51,7 @@
   --shadow-bubble: 0 1px 2px rgb(16 35 47 / 15%);
   --shadow-composer: 0 1px 8px 1px rgb(0 0 0 / 12%);
   --shadow-menu: 0 4px 16px rgb(0 0 0 / 15%);
+  --shadow-header: 0 1px 2px rgb(0 0 0 / 6%);
 
   // radii
   --radius-s: 5px;
@@ -78,6 +79,7 @@
   --sidebar-width: clamp(280px, 38vw, 360px);
   --chat-max-width: 728px;
   --control-height: 48px;
+  --round-button-size: 54px;
 
   // motion
   --duration: 200ms;

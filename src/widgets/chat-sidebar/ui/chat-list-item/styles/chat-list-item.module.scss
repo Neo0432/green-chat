@@ -1,0 +1,103 @@
+.chat-list-item {
+  --_title-color: var(--color-text);
+  --_secondary-color: var(--color-text-secondary);
+  --_status-color: var(--color-primary);
+  --_failed-color: var(--color-danger);
+  --_badge-background: var(--color-primary);
+  --_badge-color: var(--color-white);
+  --_focus-color: var(--color-primary);
+
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: repeat(2, 1fr);
+  column-gap: var(--space-3);
+  align-items: center;
+
+  inline-size: 100%;
+  block-size: 72px;
+  padding: 9px;
+  border-radius: var(--radius);
+
+  text-align: start;
+
+  transition: background-color var(--transition);
+
+  &:hover:not(&--active) {
+    background-color: var(--color-background);
+  }
+
+  @include focus-visible {
+    outline: 2px solid var(--_focus-color);
+    outline-offset: -2px;
+  }
+
+  &--active {
+    --_title-color: var(--color-white);
+    --_secondary-color: var(--color-white);
+    --_status-color: var(--color-white);
+    --_failed-color: var(--color-white);
+    --_badge-background: var(--color-white);
+    --_badge-color: var(--color-primary);
+    --_focus-color: var(--color-white);
+
+    background-color: var(--color-primary);
+  }
+
+  &__avatar {
+    grid-row: span 2;
+  }
+
+  &__title {
+    @include body-16-21-medium-normal;
+    @include ellipsis;
+
+    color: var(--_title-color);
+  }
+
+  &__meta {
+    display: flex;
+    gap: var(--space-1);
+    align-items: center;
+    justify-self: end;
+  }
+
+  &__status {
+    display: flex;
+    color: var(--_status-color);
+
+    &--failed {
+      color: var(--_failed-color);
+    }
+  }
+
+  &__time {
+    @include caption-12-16-regular-normal;
+
+    color: var(--_secondary-color);
+  }
+
+  &__preview {
+    @include body-15-20-regular-normal;
+    @include ellipsis;
+
+    color: var(--_secondary-color);
+  }
+
+  &__badge {
+    @include body-14-18-medium-normal;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: end;
+
+    min-inline-size: 22px;
+    block-size: 22px;
+    padding-inline: 7px;
+    border-radius: 11px;
+
+    color: var(--_badge-color);
+
+    background-color: var(--_badge-background);
+  }
+}

@@ -1,0 +1,108 @@
+import {
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+  type EntityState,
+  type PayloadAction,
+} from '@reduxjs/toolkit';
+
+import { messagesSlice } from './messages-slice';
+import type { Chat, ChatData } from './types';
+
+export const chatsAdapter = createEntityAdapter<Chat, string>({ selectId: (chat) => chat.chatId });
+
+export interface ChatsState extends EntityState<Chat, string> {
+  activeChatId: string | null;
+}
+
+const { selectAll } = chatsAdapter.getSelectors();
+
+/** Reads the draft: the adapter's selectById returns a current() snapshot, so writes to it would be lost. */
+const findChat = (state: ChatsState, chatId: string): Chat | undefined => state.entities[chatId];
+
+const initialState: ChatsState = chatsAdapter.getInitialState({ activeChatId: null });
+
+interface NewChat {
+  chatId: string;
+  phone: string | null;
+  title: string;
+}
+
+export const chatsSlice = createSlice({
+  name: 'chats',
+  initialState,
+  reducers: {
+    chatCreated: {
+      reducer: (state, { payload }: PayloadAction<Chat>) => {
+        chatsAdapter.addOne(state, payload);
+      },
+      prepare: ({ chatId, phone, title }: NewChat) => {
+        const now = Date.now();
+
+        return {
+          payload: {
+            chatId,
+            phone,
+            title,
+            isTitleFromName: false,
+            createdAt: now,
+            lastActivityAt: now,
+            unreadCount: 0,
+          },
+        };
+      },
+    },
+    /** Only fills a missing phone: a chat reached by two numbers keeps the first one. */
+    chatPhoneSet: (state, { payload }: PayloadAction<{ chatId: string; phone: string }>) => {
+      const chat = findChat(state, payload.chatId);
+
+      if (chat?.phone === null) {
+        chat.phone = payload.phone;
+      }
+    },
+    /** FR-2.7 */
+    chatActivated: (state, { payload: chatId }: PayloadAction<string>) => {
+      const chat = findChat(state, chatId);
+
+      if (chat) {
+        state.activeChatId = chatId;
+        chat.unreadCount = 0;
+      }
+    },
+    chatsHydrated: (state, { payload }: PayloadAction<Pick<ChatData, 'chats' | 'activeChatId'>>) => {
+      chatsAdapter.setAll(state, payload.chats);
+      state.activeChatId = payload.activeChatId;
+    },
+    chatsReset: () => initialState,
+  },
+  selectors: {
+    /** Insertion order. */
+    selectAllChats: selectAll,
+    selectActiveChatId: (state) => state.activeChatId,
+    selectChatById: (state, chatId: string): Chat | undefined => findChat(state, chatId),
+    selectActiveChat: (state): Chat | undefined =>
+      state.activeChatId === null ? undefined : findChat(state, state.activeChatId),
+    selectChatByPhone: (state, phone: string) => selectAll(state).find((chat) => chat.phone === phone),
+    /** FR-2.1: the sort is stable, so ties keep the insertion order. */
+    selectSortedChats: createSelector([selectAll], (chats) =>
+      chats.toSorted((a, b) => b.lastActivityAt - a.lastActivityAt),
+    ),
+  },
+});
+
+export const { reducer: chatsReducer, actions: chatsActions } = chatsSlice;
+
+export const {
+  selectAllChats,
+  selectActiveChatId,
+  selectChatById,
+  selectActiveChat,
+  selectChatByPhone,
+  selectSortedChats,
+} = chatsSlice.selectors;
+
+/** What gets persisted. It reads both slices, but it is the chats that it describes. */
+export const selectChatData = createSelector(
+  [selectAllChats, messagesSlice.selectors.selectAllMessages, selectActiveChatId],
+  (chats, messages, activeChatId): ChatData => ({ chats, messages, activeChatId }),
+);

@@ -1,9 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
 
 import { ENV } from '@shared/config';
 
 import { App } from './app';
+import { createAppStore } from './store';
 
 import './styles/index.scss';
 
@@ -35,7 +37,9 @@ void startMocks()
   .then(() => {
     createRoot(rootElement).render(
       <StrictMode>
-        <App />
+        <Provider store={createAppStore()}>
+          <App />
+        </Provider>
       </StrictMode>,
     );
   });

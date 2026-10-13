@@ -20,9 +20,13 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
+    "@reduxjs/toolkit": "^2.13.0",
     "classnames": "^2.5.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "react-hook-form": "^7.90.0",
+    "react-redux": "^9.3.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {

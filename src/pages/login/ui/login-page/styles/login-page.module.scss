@@ -1,0 +1,52 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+
+  box-sizing: border-box;
+  min-block-size: 100dvh;
+  padding: 32px var(--space-4) var(--space-6);
+
+  background-color: var(--color-surface);
+
+  @include media-query-min('two-columns') {
+    padding-block-start: 48px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    inline-size: 360px;
+    max-inline-size: 100%;
+  }
+
+  &__logo {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+
+    inline-size: 160px;
+    block-size: 160px;
+    border-radius: 50%;
+
+    color: var(--color-white);
+
+    background-color: var(--color-primary);
+  }
+
+  &__title {
+    @include heading-32-42-medium-normal;
+
+    margin-block-start: 40px;
+    text-align: center;
+  }
+
+  &__subtitle {
+    @include body-16-21-regular-normal;
+
+    margin-block: var(--space-2) 40px;
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+}

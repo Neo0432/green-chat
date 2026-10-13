@@ -8,6 +8,8 @@ const config: Config = {
   watchman: false,
   // Plain jsdom lacks fetch, Response and TextEncoder, which MSW 2 relies on.
   testEnvironment: 'jest-fixed-jsdom',
+  // With nextTick and queueMicrotask faked, MSW answers an aborted request with a 500 instead of rejecting the fetch.
+  fakeTimers: { doNotFake: ['nextTick', 'queueMicrotask'] },
   setupFilesAfterEnv: ['<rootDir>/src/shared/test/setup.ts'],
   testMatch: ['<rootDir>/__tests__/**/*.test.{ts,tsx}'],
   transform: {

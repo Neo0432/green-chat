@@ -1,4 +1,4 @@
-import { isNonBlankString, isPlainObject } from '@shared/lib/predicates';
+import { isNonBlankString, isPlainObject } from '@shared/lib';
 
 import { isPrivateChatId } from './chat-id';
 import { GreenApiError } from './green-api-error';

@@ -1,4 +1,4 @@
-import { isNonBlankString, isPlainObject } from '@shared/lib/predicates';
+import { isNonBlankString, isPlainObject } from '@shared/lib';
 
 import { redactToken } from './redact-token';
 

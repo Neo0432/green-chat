@@ -1,4 +1,4 @@
-import { isPlainObject } from '@shared/lib/predicates';
+import { isPlainObject } from '@shared/lib';
 
 import { GreenApiError, isGreenApiError } from './green-api-error';
 import { request } from './request';

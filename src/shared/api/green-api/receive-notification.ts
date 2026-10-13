@@ -1,4 +1,4 @@
-import { isPlainObject } from '@shared/lib/predicates';
+import { isPlainObject } from '@shared/lib';
 
 import { request } from './request';
 import type { Credentials, ReceivedNotification, RequestOptions } from './types';

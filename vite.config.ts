@@ -40,7 +40,7 @@ const excludeMswWorker = (): Plugin => {
   };
 };
 
-/** Lets the browser reach GREEN-API from the same origin when the API host does not allow CORS (R1). */
+/** Fallback for when the GREEN-API host is unreachable or blocked from this network (R12): a same-origin proxy. */
 const createGreenApiProxy = (mode: string): Record<string, ProxyOptions> | undefined => {
   const { greenApiProxyTarget } = parseEnv(loadEnv(mode, process.cwd(), 'VITE_'));
 

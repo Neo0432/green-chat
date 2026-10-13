@@ -1,4 +1,4 @@
-import { assertNever } from '@shared/lib/predicates';
+import { assertNever } from '@shared/lib';
 
 export type GreenApiErrorKind = 'http' | 'network' | 'timeout' | 'parse' | 'aborted';
 
@@ -30,8 +30,9 @@ const getDefaultMessage = ({ kind, status, serverMessage }: GreenApiErrorParams)
 };
 
 /**
- * The only error type the GREEN-API client throws. The message is built from safe parts only
- * (never the request URL, which holds the token), so the error can be logged as is.
+ * The error type for every transport and server failure of the GREEN-API client; a bad argument still throws as
+ * is (`RangeError`, `URIError`). The message is built from safe parts only (never the request URL, which holds
+ * the token), so the error can be logged as is.
  */
 export class GreenApiError extends Error {
   readonly kind: GreenApiErrorKind;

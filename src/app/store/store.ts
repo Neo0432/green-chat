@@ -1,5 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
+import { receiveReducer } from '@features/receive-messages';
+
 import { chatsReducer, messagesReducer } from '@entities/chat';
 import { getInitialSessionState, sessionReducer, startSessionPersistence } from '@entities/session';
 
@@ -7,7 +9,12 @@ import { listenerMiddleware } from '@shared/lib/redux';
 
 import { startChatPersistence } from './chat-persistence';
 
-const rootReducer = combineReducers({ session: sessionReducer, chats: chatsReducer, messages: messagesReducer });
+const rootReducer = combineReducers({
+  session: sessionReducer,
+  chats: chatsReducer,
+  messages: messagesReducer,
+  receive: receiveReducer,
+});
 
 type PreloadedState = Partial<ReturnType<typeof rootReducer>>;
 

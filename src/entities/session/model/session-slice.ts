@@ -43,10 +43,12 @@ export const sessionSlice = createSlice({
     selectCredentials: (state) => state.credentials,
     selectIdInstance: (state) => state.credentials?.idInstance ?? null,
     selectIsSignedIn: (state) => state.credentials !== null,
+    selectInstanceState: (state) => state.instanceState,
     selectForcedSignOut: (state) => state.forcedSignOut,
   },
 });
 
 export const { reducer: sessionReducer, actions: sessionActions } = sessionSlice;
 
-export const { selectCredentials, selectIdInstance, selectIsSignedIn, selectForcedSignOut } = sessionSlice.selectors;
+export const { selectCredentials, selectIdInstance, selectInstanceState, selectIsSignedIn, selectForcedSignOut } =
+  sessionSlice.selectors;

@@ -58,6 +58,15 @@ describe('chats slice', () => {
       expect(state.activeChatId).toBeNull();
     });
 
+    it('creates a chat at the time it is given, so the list sorts by the time of its first message', () => {
+      const state = reduce(
+        undefined,
+        chatsActions.chatCreated({ chatId: '11', phone: null, title: 'Alice', createdAt: 1_000 }),
+      );
+
+      expect(state.entities['11']).toMatchObject({ createdAt: 1_000, lastActivityAt: 1_000 });
+    });
+
     it('does not replace a chat that already exists', () => {
       const state = reduce(
         undefined,
@@ -87,6 +96,36 @@ describe('chats slice', () => {
       );
 
       expect(state.entities['11'].phone).toBe('79001234567');
+    });
+
+    it('replaces a placeholder title with a name once, and never overwrites a name (FR-2.8)', () => {
+      const state = reduce(
+        undefined,
+        chatsActions.chatCreated({ chatId: '11', phone: '79001234567', title: '+79001234567' }),
+        chatsActions.chatTitleSetFromName({ chatId: '11', title: 'Alice' }),
+        chatsActions.chatTitleSetFromName({ chatId: '11', title: 'Bob' }),
+      );
+
+      expect(state.entities['11']).toMatchObject({ title: 'Alice', isTitleFromName: true });
+    });
+
+    it('ignores a name for a chat that does not exist', () => {
+      const state = reduce(undefined, chatsActions.chatTitleSetFromName({ chatId: '404', title: 'Alice' }));
+
+      expect(state.ids).toEqual([]);
+    });
+
+    it('counts unread messages', () => {
+      const state = reduce(
+        undefined,
+        chatsActions.chatCreated({ chatId: '11', phone: null, title: 'Alice' }),
+        chatsActions.chatUnreadIncremented('11'),
+        chatsActions.chatUnreadIncremented('11'),
+        chatsActions.chatUnreadIncremented('404'),
+      );
+
+      expect(state.entities['11'].unreadCount).toBe(2);
+      expect(state.ids).toEqual(['11']);
     });
 
     it('activates a chat and resets its unread count (FR-2.7)', () => {

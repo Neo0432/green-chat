@@ -7,6 +7,7 @@ import {
   messagesActions,
   type MessagesByChat,
   messagesReducer,
+  selectHasMessage,
   selectLastMessage,
   selectMessagesByChat,
 } from '@entities/chat';
@@ -272,6 +273,28 @@ describe('messages slice', () => {
     });
   });
 
+  describe('received messages', () => {
+    it('appends a message, and does not append it twice (FR-4.9)', () => {
+      const received = messagesActions.messageReceived(createApiMessage({ idMessage: 'srv-1' }));
+
+      const once = reduce(undefined, received);
+      const twice = reduce(once, received);
+
+      expect(getList(once)).toHaveLength(1);
+      expect(twice).toEqual(once);
+    });
+
+    it('keeps messages with other idMessages, also those with the same text', () => {
+      const state = reduce(
+        undefined,
+        messagesActions.messageReceived(createApiMessage({ idMessage: 'srv-1' })),
+        messagesActions.messageReceived(createApiMessage({ idMessage: 'srv-2' })),
+      );
+
+      expect(getList(state).map(({ idMessage }) => idMessage)).toEqual(['srv-1', 'srv-2']);
+    });
+  });
+
   describe('API messages', () => {
     beforeEach(() => {
       jest.useFakeTimers({ now: 5_000 });
@@ -327,6 +350,15 @@ describe('messages slice', () => {
       expect(selectMessagesByChat(state, '404')).toBe(selectMessagesByChat(state, '405'));
     });
 
+    it('tells whether the chat holds a message with an idMessage', () => {
+      const store = createAppStore({});
+      store.dispatch(messagesActions.messagesHydrated({ [CHAT_ID]: [buildMessage({ idMessage: 'srv-1' })] }));
+
+      expect(selectHasMessage(store.getState(), CHAT_ID, 'srv-1')).toBe(true);
+      expect(selectHasMessage(store.getState(), CHAT_ID, 'srv-2')).toBe(false);
+      expect(selectHasMessage(store.getState(), '404', 'srv-1')).toBe(false);
+    });
+
     it('returns the last message of a chat, if there is one', () => {
       const state = createState();
 
@@ -370,6 +402,14 @@ describe('messages slice', () => {
       const store = createStore();
 
       store.dispatch(messagesActions.apiMessageReceived(createApiMessage({ timestamp: 7_000 })));
+
+      expect(getActivity(store)).toBe(7_000);
+    });
+
+    it('moves the chat to the time of a message that was received', () => {
+      const store = createStore();
+
+      store.dispatch(messagesActions.messageReceived(createApiMessage({ timestamp: 7_000 })));
 
       expect(getActivity(store)).toBe(7_000);
     });

@@ -3,7 +3,7 @@ import { createSlice, nanoid, type PayloadAction } from '@reduxjs/toolkit';
 import { applySendSuccess, matchApiMessage } from '../lib/reconcile';
 import { withStatus } from '../lib/status-rank';
 
-import type { ApiMessage, Message, MessagesByChat, MessageStatus } from './types';
+import type { ApiMessage, Message, MessagesByChat, MessageStatus, ReceivedMessage } from './types';
 
 const initialState: MessagesByChat = {};
 
@@ -21,6 +21,9 @@ interface StatusUpdate {
   status: MessageStatus;
   error?: string;
 }
+
+const hasIdMessage = (list: Message[] | undefined, idMessage: string) =>
+  list?.some((message) => message.idMessage === idMessage) ?? false;
 
 const updateByLocalId = (list: Message[] | undefined, localId: string, update: (message: Message) => Message) => {
   const index = list?.findIndex((message) => message.localId === localId) ?? -1;
@@ -92,6 +95,14 @@ export const messagesSlice = createSlice({
         }
       }
     },
+    /** FR-4.5, FR-4.6: an incoming message, or one sent from the phone. FR-4.9: a known `idMessage` is a no-op. */
+    messageReceived: (state, { payload }: PayloadAction<ReceivedMessage>) => {
+      const list = (state[payload.chatId] ??= []);
+
+      if (!hasIdMessage(list, payload.idMessage)) {
+        list.push(payload);
+      }
+    },
     /** FR-4.7: a message sent through the API, by us or by another client. FR-4.9: a known `idMessage` is a no-op. */
     apiMessageReceived: (state, { payload }: PayloadAction<ApiMessage>) => {
       const list = (state[payload.chatId] ??= []);
@@ -109,9 +120,10 @@ export const messagesSlice = createSlice({
     /** One stable empty list for a chat without messages, so a component does not re-render for nothing. */
     selectMessagesByChat: (state, chatId: string) => state[chatId] ?? NO_MESSAGES,
     selectLastMessage: (state, chatId: string) => state[chatId]?.at(-1),
+    selectHasMessage: (state, chatId: string, idMessage: string) => hasIdMessage(state[chatId], idMessage),
   },
 });
 
 export const { reducer: messagesReducer, actions: messagesActions } = messagesSlice;
 
-export const { selectMessagesByChat, selectLastMessage } = messagesSlice.selectors;
+export const { selectMessagesByChat, selectLastMessage, selectHasMessage } = messagesSlice.selectors;

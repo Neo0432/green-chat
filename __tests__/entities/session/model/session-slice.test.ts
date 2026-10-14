@@ -2,6 +2,7 @@ import {
   selectCredentials,
   selectForcedSignOut,
   selectIdInstance,
+  selectInstanceState,
   selectIsSignedIn,
   sessionActions,
   sessionReducer,
@@ -68,6 +69,11 @@ describe('session slice', () => {
       expect(selectIsSignedIn({ session: FORCED_OUT })).toBe(false);
       expect(selectForcedSignOut({ session: FORCED_OUT })).toEqual({ idInstance: CREDENTIALS.idInstance });
       expect(selectForcedSignOut({ session: SIGNED_IN })).toBeNull();
+    });
+
+    it('selects the last known state of the instance', () => {
+      expect(selectInstanceState({ session: SIGNED_IN })).toBe('authorized');
+      expect(selectInstanceState({ session: SIGNED_OUT })).toBeNull();
     });
   });
 });

@@ -3,6 +3,7 @@ export { toServerLocalId } from './lib/server-local-id';
 export {
   chatsActions,
   chatsReducer,
+  selectActivationCount,
   selectActiveChat,
   selectActiveChatId,
   selectChatById,

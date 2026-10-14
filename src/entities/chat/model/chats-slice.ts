@@ -14,6 +14,8 @@ export const chatsAdapter = createEntityAdapter<Chat, string>({ selectId: (chat)
 
 export interface ChatsState extends EntityState<Chat, string> {
   activeChatId: string | null;
+  /** Counts every activation, also of the chat that is active already, so the UI can react to a repeated click. */
+  activationCount: number;
 }
 
 const { selectAll } = chatsAdapter.getSelectors();
@@ -21,7 +23,7 @@ const { selectAll } = chatsAdapter.getSelectors();
 /** Reads the draft: the adapter's selectById returns a current() snapshot, so writes to it would be lost. */
 const findChat = (state: ChatsState, chatId: string): Chat | undefined => state.entities[chatId];
 
-const initialState: ChatsState = chatsAdapter.getInitialState({ activeChatId: null });
+const initialState: ChatsState = chatsAdapter.getInitialState({ activeChatId: null, activationCount: 0 });
 
 interface NewChat {
   chatId: string;
@@ -82,6 +84,7 @@ export const chatsSlice = createSlice({
 
       if (chat) {
         state.activeChatId = chatId;
+        state.activationCount += 1;
         chat.unreadCount = 0;
       }
     },
@@ -115,6 +118,7 @@ export const chatsSlice = createSlice({
     /** Insertion order. */
     selectAllChats: selectAll,
     selectActiveChatId: (state) => state.activeChatId,
+    selectActivationCount: (state) => state.activationCount,
     selectChatById: (state, chatId: string): Chat | undefined => findChat(state, chatId),
     selectActiveChat: (state): Chat | undefined =>
       state.activeChatId === null ? undefined : findChat(state, state.activeChatId),
@@ -131,6 +135,7 @@ export const { reducer: chatsReducer, actions: chatsActions } = chatsSlice;
 export const {
   selectAllChats,
   selectActiveChatId,
+  selectActivationCount,
   selectChatById,
   selectActiveChat,
   selectChatByPhone,

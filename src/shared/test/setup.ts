@@ -4,6 +4,7 @@ import type { ENV } from '@shared/config';
 
 import { server } from './msw/server';
 import { mockMatchMedia } from './mock-match-media';
+import { mockResizeObserver } from './mock-resize-observer';
 
 // `import.meta.env` does not exist in Jest (CJS), so the only module reading it is replaced.
 jest.mock('@shared/config/env', () => ({
@@ -13,6 +14,7 @@ jest.mock('@shared/config/env', () => ({
 beforeEach(() => {
   // A desktop window, unless the test says otherwise.
   mockMatchMedia(false);
+  mockResizeObserver();
 });
 
 beforeAll(() => {

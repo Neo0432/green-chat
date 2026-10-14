@@ -150,6 +150,17 @@ describe('chats slice', () => {
       expect(state.activeChatId).toBeNull();
     });
 
+    it('clears the active chat on deactivation, and keeps the chat itself', () => {
+      const state = reduce(
+        undefined,
+        chatsActions.chatsHydrated({ chats: [buildChat({ chatId: '11' })], activeChatId: '11' }),
+        chatsActions.chatDeactivated(),
+      );
+
+      expect(state.activeChatId).toBeNull();
+      expect(state.ids).toEqual(['11']);
+    });
+
     it('replaces everything on hydration', () => {
       const state = reduce(
         undefined,

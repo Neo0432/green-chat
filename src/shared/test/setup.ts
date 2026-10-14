@@ -3,11 +3,17 @@ import '@testing-library/jest-dom';
 import type { ENV } from '@shared/config';
 
 import { server } from './msw/server';
+import { mockMatchMedia } from './mock-match-media';
 
 // `import.meta.env` does not exist in Jest (CJS), so the only module reading it is replaced.
 jest.mock('@shared/config/env', () => ({
   ENV: { enableApiMocks: false, greenApiProxyTarget: null } satisfies typeof ENV,
 }));
+
+beforeEach(() => {
+  // A desktop window, unless the test says otherwise.
+  mockMatchMedia(false);
+});
 
 beforeAll(() => {
   // A request without a handler fails the test instead of silently passing.

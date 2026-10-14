@@ -93,4 +93,8 @@
   @include media-query-min('full-sidebar') {
     --sidebar-width: 360px;
   }
+
+  @include media-query-max('two-columns') {
+    --sidebar-width: 100%;
+  }
 }

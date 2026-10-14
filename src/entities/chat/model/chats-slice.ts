@@ -85,6 +85,9 @@ export const chatsSlice = createSlice({
         chat.unreadCount = 0;
       }
     },
+    chatDeactivated: (state) => {
+      state.activeChatId = null;
+    },
     chatsHydrated: (state, { payload }: PayloadAction<Pick<ChatData, 'chats' | 'activeChatId'>>) => {
       chatsAdapter.setAll(state, payload.chats);
       state.activeChatId = payload.activeChatId;

@@ -11,6 +11,10 @@
 
   background-color: var(--color-surface);
 
+  @include media-query-max('two-columns') {
+    border-inline-end: 0;
+  }
+
   &__create-chat-button {
     position: absolute;
     inset-block-end: var(--space-5);

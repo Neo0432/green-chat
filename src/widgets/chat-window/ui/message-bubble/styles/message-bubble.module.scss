@@ -76,8 +76,16 @@
   }
 
   &__retry {
+    position: relative;
     display: flex;
     flex-shrink: 0;
     color: var(--color-danger);
+
+    // The 16px icon stays, its touch target grows to 40px (§7.13).
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -12px;
+    }
   }
 }

@@ -2,6 +2,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
+import { startReceiveListener } from '@features/receive-messages';
+
 import { ENV } from '@shared/config';
 
 import { App } from './app';
@@ -35,9 +37,13 @@ void startMocks()
     console.error('API mocks failed to start, rendering without them', error);
   })
   .then(() => {
+    const store = createAppStore();
+
+    startReceiveListener(store);
+
     createRoot(rootElement).render(
       <StrictMode>
-        <Provider store={createAppStore()}>
+        <Provider store={store}>
           <App />
         </Provider>
       </StrictMode>,

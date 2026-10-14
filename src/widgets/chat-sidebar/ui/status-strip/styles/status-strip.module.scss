@@ -1,0 +1,27 @@
+.status-strip {
+  @include body-14-18-regular-normal;
+
+  flex-shrink: 0;
+
+  &--connecting {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+
+    block-size: 32px;
+    padding-inline: var(--space-4);
+
+    color: var(--color-text-secondary);
+  }
+
+  &--error {
+    margin: var(--space-2);
+    padding: var(--space-3);
+    border-radius: var(--radius);
+
+    color: var(--color-banner-warning-text);
+    overflow-wrap: anywhere;
+
+    background-color: var(--color-banner-warning-bg);
+  }
+}

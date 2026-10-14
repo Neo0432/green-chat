@@ -4,6 +4,7 @@ export {
   selectCredentials,
   selectForcedSignOut,
   selectIdInstance,
+  selectInstanceState,
   selectIsSignedIn,
   sessionActions,
   sessionReducer,

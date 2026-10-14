@@ -1,5 +1,6 @@
 .text-field {
   --_accent: var(--color-primary);
+  --_accent-text: var(--color-primary-text);
   --_border: var(--color-border);
   --_label: var(--color-text-secondary);
 
@@ -10,6 +11,7 @@
 
   &--error {
     --_accent: var(--color-danger);
+    --_accent-text: var(--color-danger);
     --_border: var(--color-danger);
     --_label: var(--color-danger);
   }
@@ -89,7 +91,7 @@
   }
 
   &__input:focus ~ &__label {
-    --_label: var(--_accent);
+    --_label: var(--_accent-text);
   }
 
   &__input:focus ~ &__label,

@@ -1,0 +1,90 @@
+{
+  "name": "green-chat",
+  "description": "Telegram-like web chat built on top of GREEN-API",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "stylelint": "stylelint \"**/*.{css,scss,sass}\"",
+    "stylelint:fix": "stylelint \"**/*.{css,scss,sass}\" --fix",
+    "prettier": "prettier --check .",
+    "prettier:write": "prettier --write .",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
+    "@reduxjs/toolkit": "^2.13.0",
+    "classnames": "^2.5.1",
+    "dayjs": "^1.11.23",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-hook-form": "^7.90.0",
+    "react-redux": "^9.3.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.2",
+    "@eslint/js": "^10.0.1",
+    "@swc/core": "^1.16.18",
+    "@swc/jest": "^0.2.39",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^10.10.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-boundaries": "^7.2.0",
+    "eslint-plugin-jest": "^29.16.6",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.6",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
+    "eslint-plugin-testing-library": "^7.16.2",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "globals": "^17.12.0",
+    "husky": "^9.1.7",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.0.0",
+    "jest-environment-jsdom": "^30.0.0",
+    "jest-fixed-jsdom": "^0.0.11",
+    "lint-staged": "^17.5.1",
+    "msw": "^2.15.0",
+    "prettier": "^3.9.8",
+    "sass-embedded": "^1.104.1",
+    "stylelint": "^17.15.0",
+    "stylelint-config-clean-order": "^10.0.0",
+    "stylelint-config-standard-scss": "^17.0.0",
+    "stylelint-order": "^8.1.1",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.69.0",
+    "validate-branch-name": "^1.3.2",
+    "vite": "^8.3.0"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "validate-branch-name": {
+    "pattern": "^(main|develop)$|^(feat|fix)/[a-z0-9]+(-[a-z0-9]+)*$",
+    "errorMsg": "Invalid branch name. Use main, develop, feat/<kebab-slug> or fix/<kebab-slug>"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
+}

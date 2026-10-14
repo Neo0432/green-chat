@@ -1,0 +1,101 @@
+@use '../mixins/mixins' as *;
+
+:root {
+  // colors
+  --color-primary: #3390ec;
+  --color-primary-hover: #2f86dc;
+  --color-primary-light: rgb(51 144 236 / 8%);
+  --color-primary-text: #1f6bbb;
+  --color-text: #000;
+  --color-text-secondary: #707579;
+  --color-placeholder: #9e9e9e;
+  --color-surface: #fff;
+  --color-background: #f4f4f5;
+  --color-border: #dfe1e5;
+  --color-secondary: #c4c9cc;
+  --color-danger: #c33;
+  --color-danger-light: rgb(204 51 51 / 8%);
+  --color-success: #70b768;
+  --color-white: #fff;
+  --color-backdrop: rgb(0 0 0 / 25%);
+  --color-bubble-in: var(--color-surface);
+  --color-bubble-out: #eeffde;
+  --color-bubble-out-meta: #4fae4e;
+  --color-bubble-in-meta: var(--color-text-secondary);
+  --color-date-pill-bg: rgb(0 0 0 / 50%);
+  --color-banner-warning-bg: var(--color-danger-light);
+  --color-banner-warning-text: var(--color-danger);
+
+  // wallpaper
+  --wallpaper-1: #dbddbb;
+  --wallpaper-2: #6ba587;
+  --wallpaper-3: #d5d88d;
+  --wallpaper-4: #88b884;
+
+  // avatar gradients (top, bottom)
+  --avatar-red-top: #ff845e;
+  --avatar-red-bottom: #d45246;
+  --avatar-orange-top: #febb5b;
+  --avatar-orange-bottom: #f68136;
+  --avatar-violet-top: #b694f9;
+  --avatar-violet-bottom: #6c61df;
+  --avatar-green-top: #9ad164;
+  --avatar-green-bottom: #46ba43;
+  --avatar-cyan-top: #53edd6;
+  --avatar-cyan-bottom: #28c9b7;
+  --avatar-blue-top: #5caffa;
+  --avatar-blue-bottom: #408acf;
+  --avatar-pink-top: #ff8aac;
+  --avatar-pink-bottom: #d95574;
+
+  // shadows
+  --shadow-bubble: 0 1px 2px rgb(16 35 47 / 15%);
+  --shadow-composer: 0 1px 8px 1px rgb(0 0 0 / 12%);
+  --shadow-menu: 0 4px 16px rgb(0 0 0 / 15%);
+  --shadow-header: 0 1px 2px rgb(0 0 0 / 6%);
+
+  // radii
+  --radius-s: 5px;
+  --radius: 12px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --radius-bubble: 15px;
+
+  // fonts
+  --font-family:
+    roboto, -apple-system, blinkmacsystemfont, 'Segoe UI', 'Helvetica Neue', arial, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji';
+  --line-height: 1.3125;
+
+  // spacing
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+
+  // layout
+  --header-height: 56px;
+  --sidebar-width: clamp(280px, 38vw, 360px);
+  --chat-max-width: 728px;
+  --control-height: 48px;
+  --round-button-size: 54px;
+
+  // motion
+  --duration: 200ms;
+  --easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: var(--duration) var(--easing);
+
+  // z-indexes
+  --index-dropdown: 300;
+  --index-modal: 400;
+
+  @include media-query-min('full-sidebar') {
+    --sidebar-width: 360px;
+  }
+
+  @include media-query-max('two-columns') {
+    --sidebar-width: 100%;
+  }
+}

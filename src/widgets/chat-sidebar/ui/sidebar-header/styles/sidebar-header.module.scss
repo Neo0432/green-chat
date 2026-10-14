@@ -1,0 +1,33 @@
+.sidebar-header {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-2);
+  align-items: center;
+
+  box-sizing: border-box;
+  block-size: var(--header-height);
+  padding-inline: var(--space-2);
+
+  &__title {
+    @include heading-20-26-medium-normal;
+    @include ellipsis;
+
+    flex: 1;
+    min-inline-size: 0;
+    color: var(--color-text);
+  }
+
+  &__mock-pill {
+    @include caption-12-16-medium-normal;
+
+    flex-shrink: 0;
+
+    padding: 2px var(--space-2);
+    border-radius: 10px;
+
+    color: var(--color-primary-text);
+    text-transform: uppercase;
+
+    background-color: var(--color-primary-light);
+  }
+}

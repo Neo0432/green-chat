@@ -1,0 +1,50 @@
+@use './typography' as *;
+
+@mixin focus-visible {
+  &:focus-visible {
+    @content;
+  }
+}
+
+@mixin focus-ring($offset: 2px) {
+  outline: 2px solid var(--color-primary);
+  outline-offset: $offset;
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin visually-hidden {
+  position: absolute;
+
+  overflow: hidden;
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+
+  white-space: nowrap;
+
+  clip-path: inset(100%);
+}
+
+// The white-on-dark label that sits on the wallpaper: the date separator and the empty states.
+@mixin wallpaper-pill {
+  @include body-15-20-medium-normal;
+
+  padding: var(--space-1) 10px;
+  border-radius: var(--radius);
+  color: var(--color-white);
+  background-color: var(--color-date-pill-bg);
+}

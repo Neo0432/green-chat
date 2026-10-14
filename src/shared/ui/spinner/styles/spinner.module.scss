@@ -1,0 +1,42 @@
+.spinner {
+  position: relative;
+
+  display: inline-block;
+  flex-shrink: 0;
+
+  inline-size: var(--_size);
+  block-size: var(--_size);
+  border: 2px solid currentcolor;
+  border-block-end-color: transparent;
+  border-radius: 50%;
+
+  animation: spin 700ms linear infinite;
+
+  // Rotation is not vestibular motion, and a frozen arc looks like a hang: slow down instead of stopping.
+  @include reduced-motion {
+    animation-duration: 1.4s !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  &--16 {
+    --_size: 16px;
+  }
+
+  &--20 {
+    --_size: 20px;
+  }
+
+  &--24 {
+    --_size: 24px;
+  }
+
+  &__label {
+    @include visually-hidden;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,32 @@
+.chat-header {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-3);
+  align-items: center;
+
+  block-size: var(--header-height);
+  padding-inline: var(--space-4);
+
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-header);
+
+  @include media-query-max('two-columns') {
+    padding-inline: var(--space-2);
+  }
+
+  &__text {
+    min-inline-size: 0;
+  }
+
+  &__title {
+    @include body-16-21-medium-normal;
+    @include ellipsis;
+  }
+
+  &__subtitle {
+    @include body-14-18-regular-normal;
+    @include ellipsis;
+
+    color: var(--color-text-secondary);
+  }
+}

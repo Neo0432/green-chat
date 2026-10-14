@@ -20,11 +20,6 @@
   }
 
   &__placeholder {
-    @include body-15-20-medium-normal;
-
-    padding: var(--space-1) 10px;
-    border-radius: var(--radius);
-    color: var(--color-white);
-    background-color: var(--color-date-pill-bg);
+    @include wallpaper-pill;
   }
 }

@@ -3,10 +3,11 @@ import {
   createSelector,
   createSlice,
   type EntityState,
+  isAnyOf,
   type PayloadAction,
 } from '@reduxjs/toolkit';
 
-import { messagesSlice } from './messages-slice';
+import { messagesActions, messagesSlice } from './messages-slice';
 import type { Chat, ChatData } from './types';
 
 export const chatsAdapter = createEntityAdapter<Chat, string>({ selectId: (chat) => chat.chatId });
@@ -74,6 +75,19 @@ export const chatsSlice = createSlice({
       state.activeChatId = payload.activeChatId;
     },
     chatsReset: () => initialState,
+  },
+  extraReducers: (builder) => {
+    // FR-5.2: the activity of a chat is the time of its last message.
+    builder.addMatcher(
+      isAnyOf(messagesActions.outgoingMessageQueued, messagesActions.apiMessageReceived),
+      (state, { payload }) => {
+        const chat = findChat(state, payload.chatId);
+
+        if (chat) {
+          chat.lastActivityAt = Math.max(chat.lastActivityAt, payload.timestamp);
+        }
+      },
+    );
   },
   selectors: {
     /** Insertion order. */

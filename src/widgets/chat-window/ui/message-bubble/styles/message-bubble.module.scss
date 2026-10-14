@@ -1,0 +1,83 @@
+.message-bubble {
+  --_background: var(--color-bubble-in);
+  --_meta-color: var(--color-bubble-in-meta);
+  --_tail-size: 9px;
+  --_tail-origin: 0 0;
+
+  position: relative;
+
+  align-self: flex-start;
+
+  min-inline-size: 56px;
+  max-inline-size: min(480px, 85%);
+  padding: 4px 8px 5px;
+  border-radius: var(--radius-bubble);
+  border-end-start-radius: 0;
+
+  background-color: var(--_background);
+  box-shadow: var(--shadow-bubble);
+
+  // The tail: a square beside the bottom corner, with a quarter circle cut out of its top.
+  &::after {
+    content: '';
+
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-end: 100%;
+
+    inline-size: var(--_tail-size);
+    block-size: var(--_tail-size);
+
+    background: radial-gradient(
+      circle at var(--_tail-origin),
+      transparent calc(var(--_tail-size) - 0.5px),
+      var(--_background) var(--_tail-size)
+    );
+  }
+
+  &--out {
+    --_background: var(--color-bubble-out);
+    --_meta-color: var(--color-bubble-out-meta);
+    --_tail-origin: 100% 0;
+
+    align-self: flex-end;
+    border-end-start-radius: var(--radius-bubble);
+    border-end-end-radius: 0;
+
+    &::after {
+      inset-inline: 100% auto;
+    }
+  }
+
+  &__text {
+    @include body-16-21-regular-normal;
+
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  // Floated after the text: it shares the last line when there is room, and otherwise starts a new one.
+  &__meta {
+    @include caption-12-16-regular-normal;
+
+    float: inline-end;
+    display: inline-flex;
+    gap: 2px;
+    align-items: center;
+
+    margin-block-start: 5px;
+    margin-inline-start: var(--space-2);
+
+    color: var(--_meta-color);
+  }
+
+  &__status {
+    flex-shrink: 0;
+  }
+
+  &__retry {
+    display: flex;
+    flex-shrink: 0;
+    color: var(--color-danger);
+  }
+}

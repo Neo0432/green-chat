@@ -39,3 +39,10 @@ export interface ChatData {
   messages: MessagesByChat;
   activeChatId: string | null;
 }
+
+/** A message GREEN-API reported as sent through the API: outgoing, with its `idMessage` and a status. */
+export interface ApiMessage extends Message {
+  direction: 'out';
+  idMessage: string;
+  status: MessageStatus;
+}

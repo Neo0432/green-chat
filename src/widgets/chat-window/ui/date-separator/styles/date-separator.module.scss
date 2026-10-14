@@ -1,0 +1,6 @@
+.date-separator {
+  @include wallpaper-pill;
+
+  align-self: center;
+  margin-block: var(--space-2);
+}

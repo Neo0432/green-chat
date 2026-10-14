@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type FieldErrors, useForm, useWatch } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 
 import { selectForcedSignOut } from '@entities/session';
 
@@ -26,6 +26,7 @@ export const SignInForm = () => {
     register,
     handleSubmit,
     setError,
+    resetField,
     control,
     formState: { errors, isSubmitting },
   } = useForm<SignInFormValues, unknown, Credentials>({
@@ -45,15 +46,17 @@ export const SignInForm = () => {
     }
   };
 
-  // A field that fails validation must not stay hidden behind the disclosure.
-  const handleInvalidSubmit = ({ apiUrl }: FieldErrors<SignInFormValues>) => {
-    if (apiUrl) {
-      setIsApiUrlExpanded(true);
+  // Collapsing means "no custom URL": the value is dropped, so it is neither used nor validated.
+  const handleToggleApiUrl = () => {
+    if (isApiUrlExpanded) {
+      resetField('apiUrl');
     }
+
+    setIsApiUrlExpanded(!isApiUrlExpanded);
   };
 
   return (
-    <form className={cnRoot} noValidate onSubmit={handleSubmit(handleValidSubmit, handleInvalidSubmit)}>
+    <form className={cnRoot} noValidate onSubmit={handleSubmit(handleValidSubmit)}>
       <TextField
         label="Instance ID"
         inputMode="numeric"
@@ -70,12 +73,7 @@ export const SignInForm = () => {
         error={errors.apiTokenInstance?.message}
         {...register('apiTokenInstance')}
       />
-      <button
-        type="button"
-        className={cnToggle}
-        aria-expanded={isApiUrlExpanded}
-        onClick={() => setIsApiUrlExpanded((isExpanded) => !isExpanded)}
-      >
+      <button type="button" className={cnToggle} aria-expanded={isApiUrlExpanded} onClick={handleToggleApiUrl}>
         Custom API URL
       </button>
       {isApiUrlExpanded && (

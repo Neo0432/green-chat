@@ -18,10 +18,27 @@ describe('toServerMessage', () => {
       expect(toServerMessage('', token)).toBe('');
     });
 
-    it('keeps the text of a JSON value that is not an object', () => {
+    it('keeps the text of a JSON value that is not a structure', () => {
       expect(toServerMessage('null', token)).toBe('null');
       expect(toServerMessage('"text"', token)).toBe('"text"');
-      expect(toServerMessage('[{"reason":"x"}]', token)).toBe('[{"reason":"x"}]');
+    });
+
+    it('keeps a text with a bracket that does not start it', () => {
+      expect(toServerMessage('Bad Request <script>', token)).toBe('Bad Request <script>');
+    });
+  });
+
+  describe('raw JSON and markup (FR-6.3)', () => {
+    it.each([
+      ['an object without a text field', '{"error":{"code":12,"detail":"x"}}'],
+      ['an object with blank text fields', '{"description":"  "}'],
+      ['an object with a nested object only', '{"invokeStatus":{"used":1}}'],
+      ['an array', '[{"reason":"x"}]'],
+      ['an array after whitespace', '  \n[1,2]'],
+      ['an HTML page', '<html><head><title>400 Bad Request</title></head><body><h1>400 Bad Request</h1></body></html>'],
+      ['a doctype', '<!DOCTYPE html><html></html>'],
+    ])('is empty for %s', (_name, body) => {
+      expect(toServerMessage(body, token)).toBe('');
     });
   });
 
@@ -128,10 +145,8 @@ describe('toServerMessage', () => {
       expect(fromJson(body)).toBe('Validation failed');
     });
 
-    it('keeps the raw text when the body has no readable field', () => {
-      expect(toServerMessage('{"code":1}', token)).toBe('{"code":1}');
-      expect(toServerMessage('{"description":"  "}', token)).toBe('{"description":"  "}');
-      expect(toServerMessage('{"invokeStatus":{"used":1}}', token)).toBe('{"invokeStatus":{"used":1}}');
+    it('is empty when the body has no readable field', () => {
+      expect(toServerMessage('{"code":1}', token)).toBe('');
     });
   });
 

@@ -1,4 +1,5 @@
 export { loadChatData, saveChatData } from './lib/chat-storage';
+export { toServerLocalId } from './lib/server-local-id';
 export {
   chatsActions,
   chatsReducer,

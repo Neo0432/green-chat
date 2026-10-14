@@ -6,6 +6,7 @@ import {
   selectActiveChatId,
   selectChatById,
   selectHasMessage,
+  toServerLocalId,
 } from '@entities/chat';
 import { sessionActions } from '@entities/session';
 
@@ -31,7 +32,7 @@ const getPlaceholderTitle = ({ chatId, senderPhone }: ParsedMessageNotification)
   senderPhone === null ? `Telegram ID ${chatId}` : `+${senderPhone}`;
 
 const toBaseMessage = ({ chatId, idMessage, text, timestamp }: ParsedMessageNotification) => ({
-  localId: `srv-${idMessage}`,
+  localId: toServerLocalId(idMessage),
   idMessage,
   chatId,
   text,

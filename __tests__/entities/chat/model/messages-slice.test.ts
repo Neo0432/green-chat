@@ -10,6 +10,7 @@ import {
   selectHasMessage,
   selectLastMessage,
   selectMessagesByChat,
+  toServerLocalId,
 } from '@entities/chat';
 
 import { buildChat, buildMessage } from '../fixtures';
@@ -29,7 +30,7 @@ const createApiMessage = ({
   idMessage = 'srv-1',
   ...overrides
 }: { idMessage?: string; text?: string; timestamp?: number } = {}): ApiMessage => ({
-  ...buildMessage({ localId: `srv-${idMessage}`, timestamp: 5_000, ...overrides }),
+  ...buildMessage({ localId: toServerLocalId(idMessage), timestamp: 5_000, ...overrides }),
   direction: 'out',
   status: 'sent',
   idMessage,
@@ -212,6 +213,83 @@ describe('messages slice', () => {
       );
 
       expect(getList(state)).toEqual([expect.objectContaining({ localId, idMessage: 'srv-1', status: 'sent' })]);
+    });
+  });
+
+  describe('rapid sends of identical text', () => {
+    const TEXTS = ['x', 'x', 'x', 'a', 'b', 'x'];
+    const ID_MESSAGES = ['srv-A', 'srv-B', 'srv-C', 'srv-D', 'srv-E', 'srv-F'];
+
+    beforeEach(() => {
+      jest.useFakeTimers({ now: 5_000 });
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    /** `n2` is the notification of the third send, `r2` is the response to it. */
+    const dispatchEvent = (state: MessagesState, event: string, queued: ReturnType<typeof queue>[]) => {
+      const index = Number(event.slice(1));
+
+      return event.startsWith('n')
+        ? reduce(
+            state,
+            messagesActions.apiMessageReceived(createApiMessage({ idMessage: ID_MESSAGES[index], text: TEXTS[index] })),
+          )
+        : reduce(
+            state,
+            messagesActions.messageSendSucceeded({
+              chatId: CHAT_ID,
+              localId: queued[index].payload.localId,
+              idMessage: ID_MESSAGES[index],
+            }),
+          );
+    };
+
+    it.each([
+      ['the third notification before everything', 'n2 r2 r0 n0 n1 r1 n3 r3 n4 r4 n5 r5'],
+      ['the response of the first send after the notification of the third', 'n2 r0 r2 n0 n1 r1 n3 r3 n4 r4 n5 r5'],
+      ['all notifications in reverse order, then the responses', 'n5 n4 n3 n2 n1 n0 r0 r1 r2 r3 r4 r5'],
+      [
+        'all notifications in reverse order, then the responses in reverse order',
+        'n5 n4 n3 n2 n1 n0 r5 r4 r3 r2 r1 r0',
+      ],
+      ['the responses, then the notifications', 'r2 r0 r1 r3 r4 r5 n5 n4 n3 n2 n1 n0'],
+      ['the responses of identical texts in reverse order', 'n0 n1 n2 r2 r1 r0 n5 r5 n3 n4 r3 r4'],
+    ])('keeps six bubbles in the send order and gives each its own idMessage: %s', (_name, order) => {
+      const queued = TEXTS.map((text) => queue(text));
+      const localIds = queued.map(({ payload }) => payload.localId);
+      let state = reduce(undefined, ...queued);
+
+      for (const event of order.split(' ')) {
+        state = dispatchEvent(state, event, queued);
+
+        expect(getList(state).map(({ localId }) => localId)).toEqual(localIds);
+        expect(getList(state).map(({ text }) => text)).toEqual(TEXTS);
+      }
+
+      expect(getList(state).map(({ idMessage, status }) => ({ idMessage, status }))).toEqual(
+        ID_MESSAGES.map((idMessage) => ({ idMessage, status: 'sent' })),
+      );
+    });
+
+    it('lets the ticks of the notifications follow the idMessage to the message it belongs to', () => {
+      const queued = TEXTS.map((text) => queue(text));
+      let state = reduce(undefined, ...queued);
+
+      state = dispatchEvent(state, 'n2', queued);
+      state = reduce(state, messagesActions.messageStatusUpdated({ idMessage: 'srv-C', status: 'delivered' }));
+      state = dispatchEvent(state, 'r2', queued);
+
+      expect(getList(state).map(({ idMessage, status }) => `${idMessage}:${status}`)).toEqual([
+        'null:pending',
+        'null:pending',
+        'srv-C:delivered',
+        'null:pending',
+        'null:pending',
+        'null:pending',
+      ]);
     });
   });
 

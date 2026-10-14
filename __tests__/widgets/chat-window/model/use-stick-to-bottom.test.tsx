@@ -4,6 +4,8 @@ import { useStickToBottom } from '@widgets/chat-window/model/use-stick-to-bottom
 
 import type { Message } from '@entities/chat';
 
+import { mockResizeObserver } from '@shared/test/mock-resize-observer';
+
 import { buildMessage } from '../../../entities/chat/fixtures';
 
 const SCROLL_HEIGHT = 1000;
@@ -68,5 +70,36 @@ describe('useStickToBottom', () => {
     rerender(<Host lastMessage={outgoing('b')} />);
 
     expect(scrollTop).toBe(SCROLL_HEIGHT);
+  });
+
+  it('keeps a reader at the end there when the list gets shorter, e.g. the composer grows', () => {
+    const { resize } = mockResizeObserver();
+    render(<Host lastMessage={incoming('a')} />);
+
+    scrollTop = SCROLL_HEIGHT - CLIENT_HEIGHT;
+    resize();
+
+    expect(scrollTop).toBe(SCROLL_HEIGHT);
+  });
+
+  it('does not move a reader who scrolled up when the list gets shorter', () => {
+    const { resize } = mockResizeObserver();
+    render(<Host lastMessage={incoming('a')} />);
+
+    scrollTo(100);
+    resize();
+
+    expect(scrollTop).toBe(100);
+  });
+
+  it('stops watching the list when it is gone', () => {
+    const { resize } = mockResizeObserver();
+    const { unmount } = render(<Host lastMessage={incoming('a')} />);
+
+    unmount();
+    scrollTop = 0;
+    resize();
+
+    expect(scrollTop).toBe(0);
   });
 });

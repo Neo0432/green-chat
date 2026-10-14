@@ -1,8 +1,10 @@
 import { type FormEvent, type KeyboardEvent, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 
+import { selectActivationCount } from '@entities/chat';
+
 import { SvgSend } from '@shared/assets/icons';
 import { matchesMedia, MOBILE_MEDIA_QUERY } from '@shared/lib';
-import { useAppDispatch } from '@shared/lib/redux';
+import { useAppDispatch, useAppSelector } from '@shared/lib/redux';
 import { IconButton } from '@shared/ui/icon-button';
 
 import { isSendShortcut } from '../../lib/is-send-shortcut';
@@ -18,18 +20,20 @@ interface ComposerProps {
 /** Mount it with the chat as its `key`: every chat then starts with an empty draft and, on desktop, the focus in it. */
 export const Composer = ({ chatId }: ComposerProps) => {
   const dispatch = useAppDispatch();
+  const activationCount = useAppSelector(selectActivationCount);
   const [draft, setDraft] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const hintId = useId();
   const { canSend, text, isTooLong, length } = validateMessageText(draft);
   const { cnRoot, cnHint, cnRow, cnInput } = getClasses();
 
-  // FR-2.7: on a phone the focus would open the virtual keyboard over the chat that was just opened.
+  // FR-2.7: also when the active chat is clicked again, which does not remount the composer.
+  // On a phone the focus would open the virtual keyboard over the chat that was just opened.
   useEffect(() => {
     if (!matchesMedia(MOBILE_MEDIA_QUERY)) {
       inputRef.current?.focus();
     }
-  }, []);
+  }, [activationCount]);
 
   // FR-3.1: the field is as tall as its text, up to the limit in the styles.
   useLayoutEffect(() => {

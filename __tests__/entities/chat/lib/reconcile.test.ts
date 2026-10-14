@@ -1,4 +1,5 @@
 import { applySendSuccess, matchApiMessage } from '@entities/chat/lib/reconcile';
+import { toServerLocalId } from '@entities/chat/lib/server-local-id';
 
 import { buildMessage } from '../fixtures';
 
@@ -74,7 +75,12 @@ describe('applySendSuccess', () => {
   });
 
   it('drops the copy made by the API notification, and takes its higher status (FR-4.8 (3))', () => {
-    const copy = buildMessage({ localId: 'srv-1', idMessage: 'srv-1', status: 'read', timestamp: 1_100 });
+    const copy = buildMessage({
+      localId: toServerLocalId('srv-1'),
+      idMessage: 'srv-1',
+      status: 'read',
+      timestamp: 1_100,
+    });
 
     const result = applySendSuccess([local, copy, other], 'local', 'srv-1');
 
@@ -85,5 +91,43 @@ describe('applySendSuccess', () => {
     const messages = [local];
 
     expect(applySendSuccess(messages, 'missing', 'srv-1')).toBe(messages);
+  });
+
+  describe('when another local message adopted the idMessage by its text', () => {
+    const first = buildMessage({ localId: 'first', status: 'pending', timestamp: 1_000 });
+    const third = buildMessage({ localId: 'third', status: 'pending', timestamp: 1_002 });
+    const adopted = { ...first, idMessage: 'srv-3', status: 'sent' as const };
+
+    it('swaps the idMessage and the status: the response is the truth, no message is lost or moved', () => {
+      const result = applySendSuccess([adopted, third], 'third', 'srv-3');
+
+      expect(result).toEqual([first, { ...third, idMessage: 'srv-3', status: 'sent' }]);
+    });
+
+    it('moves the status the notifications gave to the idMessage along with it', () => {
+      const delivered = { ...adopted, status: 'delivered' as const };
+
+      const result = applySendSuccess([delivered, third], 'third', 'srv-3');
+
+      expect(result).toEqual([first, { ...third, idMessage: 'srv-3', status: 'delivered' }]);
+    });
+
+    it('swaps the guesses of two messages that both adopted a wrong idMessage', () => {
+      const wrong = { ...third, idMessage: 'srv-1', status: 'sent' as const };
+      const guessed = { ...adopted, idMessage: 'srv-3' };
+
+      const result = applySendSuccess([guessed, wrong], 'third', 'srv-3');
+
+      expect(result).toEqual([
+        { ...first, idMessage: 'srv-1', status: 'sent' },
+        { ...third, idMessage: 'srv-3', status: 'sent' },
+      ]);
+    });
+
+    it('takes the idMessage from the response when the message adopted another one', () => {
+      const result = applySendSuccess([adopted, third], 'first', 'srv-1');
+
+      expect(result).toEqual([{ ...first, idMessage: 'srv-1', status: 'sent' }, third]);
+    });
   });
 });

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { Provider } from 'react-redux';
@@ -58,29 +58,75 @@ describe('SignInForm', () => {
 
     await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    expect(screen.getByLabelText('Instance ID')).toHaveAccessibleDescription('Enter the Instance ID');
+    await waitFor(() => {
+      expect(screen.getByLabelText('Instance ID')).toHaveAccessibleDescription('Enter the Instance ID');
+    });
     expect(screen.getByLabelText('API token')).toHaveAccessibleDescription('Enter the API token');
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     expect(store.getState().session.credentials).toBeNull();
 
     await user.type(screen.getByLabelText('Instance ID'), 'abc');
 
-    expect(screen.getByLabelText('Instance ID')).toHaveAccessibleDescription('Digits only, 4–20 characters');
+    await waitFor(() => {
+      expect(screen.getByLabelText('Instance ID')).toHaveAccessibleDescription('Digits only, 4–20 characters');
+    });
   });
 
-  it('shows an invalid API URL even when the disclosure was collapsed', async () => {
-    const { user } = renderForm();
+  it('shows an invalid API URL as a field error while the disclosure is expanded', async () => {
+    const { user, store } = renderForm();
+    await user.click(screen.getByRole('button', { name: 'Custom API URL' }));
+    await user.type(screen.getByLabelText('API URL'), 'example.com');
+
+    await fillAndSubmit(user, PRIMARY_INSTANCE_ID, MOCK_TOKEN);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('API URL')).toHaveAccessibleDescription('Enter a valid https:// URL');
+    });
+    expect(store.getState().session.credentials).toBeNull();
+  });
+
+  it('signs in with the URL derived from the Instance ID when the disclosure is collapsed again', async () => {
+    const { user, store } = renderForm();
+    await user.click(screen.getByRole('button', { name: 'Custom API URL' }));
+    await user.type(screen.getByLabelText('API URL'), 'https://4101.api.green-api.com');
+    await user.click(screen.getByRole('button', { name: 'Custom API URL' }));
+
+    await fillAndSubmit(user, PRIMARY_INSTANCE_ID, MOCK_TOKEN);
+
+    await waitFor(() => {
+      expect(store.getState().session.credentials).toEqual({
+        idInstance: PRIMARY_INSTANCE_ID,
+        apiTokenInstance: MOCK_TOKEN,
+        apiUrl: 'https://4100.api.green-api.com',
+      });
+    });
+    await waitForSubmissionToSettle();
+  });
+
+  it('does not let an invalid API URL behind a collapsed disclosure block the sign-in', async () => {
+    const { user, store } = renderForm();
     await user.click(screen.getByRole('button', { name: 'Custom API URL' }));
     await user.type(screen.getByLabelText('API URL'), 'example.com');
     await user.click(screen.getByRole('button', { name: 'Custom API URL' }));
 
     await fillAndSubmit(user, PRIMARY_INSTANCE_ID, MOCK_TOKEN);
 
-    expect(screen.getByLabelText('API URL')).toHaveAccessibleDescription('Enter a valid https:// URL');
+    await waitFor(() => {
+      expect(store.getState().session.credentials).toMatchObject({ apiUrl: 'https://4100.api.green-api.com' });
+    });
+    await waitForSubmissionToSettle();
+    expect(screen.queryByLabelText('API URL')).not.toBeInTheDocument();
+  });
+
+  it('starts with an empty API URL when the disclosure is expanded again', async () => {
+    const { user } = renderForm();
+    await user.click(screen.getByRole('button', { name: 'Custom API URL' }));
+    await user.type(screen.getByLabelText('API URL'), 'example.com');
+    await user.click(screen.getByRole('button', { name: 'Custom API URL' }));
 
     await user.click(screen.getByRole('button', { name: 'Custom API URL' }));
 
-    expect(screen.queryByLabelText('API URL')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('API URL')).toHaveValue('');
   });
 
   it('disables the inputs and shows "Please wait…" until GREEN-API answers (FR-1.3)', async () => {

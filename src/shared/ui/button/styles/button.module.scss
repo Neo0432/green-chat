@@ -48,7 +48,7 @@
   }
 
   &--text {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
 
     &:hover:not(:disabled) {
       background-color: var(--color-primary-light);

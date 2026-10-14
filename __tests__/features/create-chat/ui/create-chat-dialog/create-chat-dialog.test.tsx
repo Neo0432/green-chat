@@ -53,7 +53,9 @@ describe('CreateChatDialog', () => {
 
     await user.type(getPhoneField(), '12ab{Enter}');
 
-    expect(getPhoneField()).toHaveAccessibleDescription('Enter the number in international format, digits only');
+    await waitFor(() => {
+      expect(getPhoneField()).toHaveAccessibleDescription('Enter the number in international format, digits only');
+    });
     expect(onRequest).not.toHaveBeenCalled();
     expect(onClose).not.toHaveBeenCalled();
   });

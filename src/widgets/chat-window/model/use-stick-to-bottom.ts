@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 
 import type { Message } from '@entities/chat';
 
@@ -22,6 +22,24 @@ export const useStickToBottom = (lastMessage: Message | undefined) => {
       element.scrollTop = element.scrollHeight;
     }
   }, [lastLocalId, isOutgoing]);
+
+  // The composer grows with the draft and shrinks the list: a reader at the end stays at the end.
+  useEffect(() => {
+    const element = scrollRef.current;
+    const observer = new ResizeObserver(() => {
+      if (element && isNearBottomRef.current) {
+        element.scrollTop = element.scrollHeight;
+      }
+    });
+
+    if (element) {
+      observer.observe(element);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   // Measured on scroll, so the answer is about the position before the new message made the list longer.
   const handleScroll = () => {

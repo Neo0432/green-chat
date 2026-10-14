@@ -144,10 +144,23 @@ describe('chats slice', () => {
       expect(state.entities['12'].unreadCount).toBe(2);
     });
 
+    it('counts every activation, also of the chat that is active already', () => {
+      const hydrated = reduce(
+        undefined,
+        chatsActions.chatsHydrated({ chats: [buildChat({ chatId: '11' })], activeChatId: null }),
+      );
+
+      const state = reduce(hydrated, chatsActions.chatActivated('11'), chatsActions.chatActivated('11'));
+
+      expect(hydrated.activationCount).toBe(0);
+      expect(state.activationCount).toBe(2);
+    });
+
     it('ignores the activation of an unknown chat', () => {
       const state = reduce(undefined, chatsActions.chatActivated('404'));
 
       expect(state.activeChatId).toBeNull();
+      expect(state.activationCount).toBe(0);
     });
 
     it('clears the active chat on deactivation, and keeps the chat itself', () => {

@@ -94,6 +94,27 @@ describe('ChatPage', () => {
       expect(getComposerInput()).toHaveFocus();
     });
 
+    it('focuses the composer when the chat that is active already is clicked (FR-2.7)', async () => {
+      const { user } = renderPage('11');
+      const chatItem = screen.getByRole('button', { name: /^Alice, / });
+      act(() => chatItem.focus());
+
+      expect(getComposerInput()).not.toHaveFocus();
+
+      await user.click(chatItem);
+
+      expect(getComposerInput()).toHaveFocus();
+    });
+
+    it('focuses the composer when the active chat is selected with the keyboard', async () => {
+      const { user } = renderPage('11');
+      act(() => screen.getByRole('button', { name: /^Alice, / }).focus());
+
+      await user.keyboard('{Enter}');
+
+      expect(getComposerInput()).toHaveFocus();
+    });
+
     it('shows the placeholder next to the list when no chat is active', () => {
       renderPage();
 

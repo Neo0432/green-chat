@@ -162,6 +162,19 @@ describe('request', () => {
       });
     });
 
+    it.each([
+      ['an HTML page', '<html><body><h1>400 Bad Request</h1></body></html>', 'text/html'],
+      ['a JSON body without a text field', '{"error":{"code":12,"detail":"x"}}', 'application/json'],
+    ])('has no server message when the body is %s (FR-6.3)', async (_name, body, contentType) => {
+      server.use(
+        http.get(STATE_URL, () => new HttpResponse(body, { status: 400, headers: { 'Content-Type': contentType } })),
+      );
+
+      const error = await getRejection(request(TEST_CREDENTIALS, GET_STATE));
+
+      expect(error).toMatchObject({ kind: 'http', status: 400, serverMessage: undefined });
+    });
+
     it('keeps at most 300 characters of the server text', async () => {
       server.use(http.get(STATE_URL, () => HttpResponse.text('x'.repeat(5000), { status: 500 })));
 

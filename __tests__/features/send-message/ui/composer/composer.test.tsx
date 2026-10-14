@@ -9,6 +9,7 @@ import { Composer } from '@features/send-message';
 import { selectMessagesByChat } from '@entities/chat';
 
 import { mockGreenApi } from '@shared/test/mock-green-api';
+import { mockMatchMedia } from '@shared/test/mock-match-media';
 import { createMockCredentials } from '@shared/test/msw/green-api';
 
 const CHAT_ID = '10000001';
@@ -47,6 +48,14 @@ describe('Composer', () => {
     expect(getInput()).toHaveFocus();
     expect(getInput()).toHaveAttribute('placeholder', 'Message');
     expect(getSendButton()).toBeDisabled();
+  });
+
+  it('does not take the focus on a phone, so that the keyboard stays closed (FR-2.7)', () => {
+    mockMatchMedia(true);
+
+    renderComposer();
+
+    expect(getInput()).not.toHaveFocus();
   });
 
   it('sends the text on Enter, clears the field and keeps the focus (AC-11)', async () => {

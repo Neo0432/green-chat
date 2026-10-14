@@ -1,8 +1,6 @@
 .status-strip {
   @include body-14-18-regular-normal;
 
-  flex-shrink: 0;
-
   &--connecting {
     display: flex;
     gap: var(--space-2);

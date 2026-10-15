@@ -27,7 +27,6 @@ const outgoing = (localId: string) => buildMessage({ localId, direction: 'out' }
 describe('useStickToBottom', () => {
   let scrollTop = 0;
 
-  // jsdom has no layout: the list is 1000 px tall in a 400 px window, and scrolling is a plain number.
   beforeEach(() => {
     scrollTop = 0;
     jest.spyOn(Element.prototype, 'scrollHeight', 'get').mockReturnValue(SCROLL_HEIGHT);

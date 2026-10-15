@@ -17,7 +17,6 @@ const createDeps = () => ({
 
 type DepMocks = ReturnType<typeof createDeps>;
 
-/** Like a fetch that is still waiting for the server: it only ends when the loop aborts it. */
 const hangUntilAborted: ReceiveLoopDeps['receive'] = (signal) =>
   new Promise((_resolve, reject) => {
     signal.addEventListener(

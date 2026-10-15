@@ -15,6 +15,7 @@ import { server } from '@shared/test/msw/server';
 import { buildChat } from '../../../entities/chat/fixtures';
 
 const CHAT_ID = '10000001';
+const UNENCODABLE_TOKEN = '\uD800';
 
 const createSignedInStore = (credentials = createMockCredentials()) => {
   const store = createAppStore({ session: { credentials, instanceState: 'authorized', forcedSignOut: null } });
@@ -148,8 +149,7 @@ describe('sendMessage', () => {
   });
 
   it('fails the message when something unexpected goes wrong, so it does not wait forever', async () => {
-    // A lone surrogate cannot be put in a URL: the client throws a URIError that is not a GreenApiError.
-    const store = createSignedInStore(createMockCredentials('4100000001', '\uD800'));
+    const store = createSignedInStore(createMockCredentials('4100000001', UNENCODABLE_TOKEN));
 
     const result = await send(store, 'Hello');
 

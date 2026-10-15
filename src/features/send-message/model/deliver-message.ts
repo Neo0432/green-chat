@@ -12,11 +12,6 @@ interface ThunkApi {
   getState: () => RootState;
 }
 
-/**
- * Sends a queued message and records the outcome (FR-3.6); the client gives up after 15 s. An expected failure is
- * stored on the message, an auth error signs the user out (FR-1.9), anything else is a bug: the message is failed so
- * that it does not wait forever, and the error is rethrown.
- */
 export const deliverMessage = async ({ dispatch, getState }: ThunkApi, { chatId, localId, text }: Message) => {
   const credentials = selectCredentials(getState());
 
@@ -35,7 +30,6 @@ export const deliverMessage = async ({ dispatch, getState }: ThunkApi, { chatId,
       throw error;
     }
 
-    // The session ended during the request: this result belongs to a state that is gone.
     if (selectCredentials(getState()) !== credentials) {
       return;
     }

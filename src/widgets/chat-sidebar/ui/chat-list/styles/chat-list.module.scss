@@ -8,7 +8,6 @@
   padding-inline: var(--space-2);
 
   &__list {
-    // Room for the floating button, so the last chat can be scrolled clear of it.
     padding-block-end: calc(var(--round-button-size) + 2 * var(--space-5));
   }
 

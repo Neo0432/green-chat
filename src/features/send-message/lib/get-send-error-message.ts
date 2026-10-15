@@ -21,7 +21,6 @@ const getHttpMessage = (status: number | undefined, serverMessage: string | unde
   return serverMessage ? `Not sent: ${serverMessage}` : 'Not sent.';
 };
 
-/** The SendMessage column of requirements FR-6.2. */
 export const getSendErrorMessage = ({ kind, status, serverMessage }: GreenApiError) => {
   switch (kind) {
     case 'http':

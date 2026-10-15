@@ -7,7 +7,6 @@ const NOT_READY_MESSAGE = 'The instance is starting or not authorized.';
 const RATE_LIMIT_MESSAGE = 'Too many number checks. Telegram asks to pause for about 2 hours.';
 const TELEGRAM_UNAVAILABLE_MESSAGE = 'Telegram is temporarily unavailable. Try again in a few minutes.';
 
-/** `reason` of a 200 `{ status: false }`; the rate limit is the one with a code instead of a sentence. */
 const getUnavailableMessage = (serverReason: string) => {
   if (serverReason === 'rate_limit_exceeded') {
     return RATE_LIMIT_MESSAGE;
@@ -62,7 +61,6 @@ const getRequestMessage = ({ errorKind, status, serverMessage }: RequestFailure)
   }
 };
 
-/** The CheckAccount column of requirements FR-6.2. */
 export const getCreateChatErrorMessage = (failure: CreateChatFailure) => {
   switch (failure.reason) {
     case 'not-found':

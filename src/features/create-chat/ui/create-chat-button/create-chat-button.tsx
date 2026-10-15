@@ -9,7 +9,6 @@ interface CreateChatButtonProps {
   className?: string;
 }
 
-/** The floating "New chat" button. The caller positions it. */
 export const CreateChatButton = ({ className }: CreateChatButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
 

@@ -4,7 +4,6 @@ import { type Chat, type ChatData, type Message, MESSAGE_STATUSES, type Messages
 
 const DATA_VERSION = 1;
 const MAX_MESSAGES_PER_CHAT = 500;
-/** FR-5.4 */
 const UNSENT_ERROR = 'Not sent';
 
 interface StoredChatData extends ChatData {
@@ -49,11 +48,9 @@ const isStoredChatData = (value: unknown): value is StoredChatData =>
   isMessagesByChat(value.messages) &&
   isNullOrString(value.activeChatId);
 
-/** A message still `pending` was never answered: the page was closed while sending. */
 const failPending = (message: Message): Message =>
   message.status === 'pending' ? { ...message, status: 'failed', error: UNSENT_ERROR } : message;
 
-/** FR-5.3: missing, corrupt and old-version data are all `null`, so the app starts empty. */
 export const loadChatData = (idInstance: string): ChatData | null => {
   const stored = readJson(getDataKey(idInstance));
 
@@ -69,7 +66,6 @@ export const loadChatData = (idInstance: string): ChatData | null => {
   return { chats: stored.chats, messages, activeChatId: hasActiveChat ? stored.activeChatId : null };
 };
 
-/** FR-5.5. A full or unavailable storage is ignored on purpose: the app keeps working from memory. */
 export const saveChatData = (idInstance: string, { chats, messages, activeChatId }: ChatData) => {
   const lastMessages = Object.fromEntries(
     Object.entries(messages).map(([chatId, list]) => [chatId, list?.slice(-MAX_MESSAGES_PER_CHAT)]),

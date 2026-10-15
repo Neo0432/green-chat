@@ -1,5 +1,3 @@
-/** Notification bodies from the GREEN-API docs (requirements §6.9) as `ReceiveNotification` returns them. */
-
 const instanceData = { idInstance: 4100000000, wid: '79876543210@c.us', typeInstance: 'telegram' };
 
 export const incomingTextNotification = {
@@ -65,7 +63,6 @@ export const incomingGroupNotification = {
   },
 };
 
-/** Live shape of an outgoing notification: `chatId` and `chatName` are the recipient, `sender*` is our own account. */
 const outgoingSenderData = {
   chatId: '10000000',
   chatType: 'user',
@@ -116,7 +113,6 @@ export const failedStatusNotification = {
   description: 'Telegram rejected the message',
 };
 
-/** Live example: a message without a Telegram account has no `idMessage`, and the chat id is a phone. */
 export const noAccountNotification = {
   typeWebhook: 'outgoingMessageStatus',
   chatId: '77777777777@c.us',
@@ -132,7 +128,6 @@ export const noAccountWithIdMessageNotification = {
   idMessage: '115054445839974416',
 };
 
-/** Live example: `failed` can come without an `idMessage` too. */
 export const failedWithoutIdMessageNotification = {
   typeWebhook: 'outgoingMessageStatus',
   chatId: '10000000',

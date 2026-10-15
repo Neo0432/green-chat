@@ -17,10 +17,6 @@ class FakeMediaQueryList extends EventTarget implements MediaQueryList {
   removeListener = () => undefined;
 }
 
-/**
- * jsdom has no `matchMedia`. Every query answers with one shared flag, and `setMatches` flips it
- * and tells the listeners, like a window crossing the breakpoint.
- */
 export const mockMatchMedia = (initialMatches = false) => {
   let isMatching = initialMatches;
   const lists = new Set<FakeMediaQueryList>();

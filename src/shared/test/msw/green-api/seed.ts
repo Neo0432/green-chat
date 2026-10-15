@@ -17,10 +17,6 @@ const ALICE = { chatId: '20000001', senderName: 'Alice (mock)', senderPhone: 799
 const ROW_COUNT = 10;
 const SECONDS_PER_ROW = 30;
 
-/**
- * MK-9: the queue of the happy-path instance, in order. The rows are 30 seconds apart and the last one is 30
- * seconds old, so the chats look recent. The `idMessage`s are fixed.
- */
 export const createSeed = (nowMs: number = Date.now()): GreenApiSeed => {
   const idInstance = PRIMARY_INSTANCE_ID;
   const instanceData = createInstanceData(idInstance);

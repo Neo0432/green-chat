@@ -4,10 +4,6 @@ export type WriteJsonResult = { ok: true } | { ok: false; reason: 'quota' | 'una
 
 const isQuotaError = (error: unknown) => error instanceof DOMException && error.name === 'QuotaExceededError';
 
-/**
- * Every access to `window.localStorage` sits in a `try`: the getter itself throws when site data is blocked, and
- * the methods throw in some private modes or when the storage is full. A missing, corrupt or unreadable value is `null`.
- */
 export const readJson = (key: string): unknown => {
   try {
     const raw = window.localStorage.getItem(key);
@@ -20,7 +16,6 @@ export const readJson = (key: string): unknown => {
 
     return value;
   } catch {
-    // Unavailable storage and corrupt JSON both mean there is nothing usable to read.
     return null;
   }
 };
@@ -35,17 +30,22 @@ export const writeJson = (key: string, value: unknown): WriteJsonResult => {
   }
 };
 
-export const removeKey = (key: string) => {
+const ignoreStorageFailure = (action: () => void) => {
   try {
-    window.localStorage.removeItem(key);
+    action();
   } catch {
-    // Unavailable storage holds nothing to remove.
+    return;
   }
 };
 
-/** Removes only the keys of this app: the origin may be shared with other apps (localhost in development). */
+export const removeKey = (key: string) => {
+  ignoreStorageFailure(() => {
+    window.localStorage.removeItem(key);
+  });
+};
+
 export const removeAllAppKeys = () => {
-  try {
+  ignoreStorageFailure(() => {
     const { localStorage } = window;
     const keys = Array.from({ length: localStorage.length }, (_, index) => localStorage.key(index));
 
@@ -54,7 +54,5 @@ export const removeAllAppKeys = () => {
         localStorage.removeItem(key);
       }
     }
-  } catch {
-    // Unavailable storage holds nothing to remove.
-  }
+  });
 };

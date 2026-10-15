@@ -3,7 +3,6 @@ import type { SpinnerSize } from './constants';
 
 export interface SpinnerProps {
   size?: SpinnerSize;
-  /** Screen-reader text. Leave it out when the surrounding element already says what is loading. */
   label?: string;
   className?: string;
 }

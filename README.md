@@ -18,6 +18,22 @@ yarn dev
 
 The app is served on http://localhost:3000.
 
+## Get GREEN-API credentials
+
+1. Sign up at [console.green-api.com](https://console.green-api.com).
+2. Create a Telegram instance. The free "Developer" tariff is enough.
+3. Authorize the instance with your Telegram account (scan the QR code or use the phone code) until its status is
+   "authorized".
+4. On the instance page, copy `idInstance` (the app's "Instance ID") and `apiTokenInstance` (the "API token"). Copy the
+   API URL too if it differs from `https://<first 4 digits of the Instance ID>.api.green-api.com`: the login page has
+   a "Custom API URL" field for it.
+5. In the instance settings, leave the webhook URL empty and turn the incoming message notifications on. All settings
+   are listed in [Instance settings](#2-instance-settings).
+
+**Try without an account.** Mock mode needs no credentials: copy `.env.example` to `.env.development.local`, set
+`VITE_ENABLE_API_MOCKS=true`, run `yarn dev` and sign in with the Instance ID `4100000001` and the token `mock-token`.
+See [Mock mode](#mock-mode).
+
 ## Scripts
 
 | Script                                  | Description                               |

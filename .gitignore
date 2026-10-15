@@ -1,4 +1,3 @@
-# Logs
 logs
 *.log
 npm-debug.log*
@@ -10,16 +9,13 @@ dist
 coverage
 *.local
 
-# Env
 .env
 .env.*
 !.env.example
 !.env.development
 
-# Project docs (local only)
 docs/
 
-# Editor
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
@@ -31,5 +27,4 @@ docs/
 *.sln
 *.sw?
 
-# Claude Code
 .claude/settings.local.json

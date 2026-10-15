@@ -15,7 +15,6 @@ interface CreateChatDialogProps {
   onClose: () => void;
 }
 
-/** Mounted only while open, so every opening starts with an empty form. */
 export const CreateChatDialog = ({ onClose }: CreateChatDialogProps) => {
   const dispatch = useAppDispatch();
   const formId = useId();
@@ -39,7 +38,6 @@ export const CreateChatDialog = ({ onClose }: CreateChatDialogProps) => {
     }
   };
 
-  // The request cannot be taken back, so closing is refused until it is answered (at most 15 s).
   const handleClose = () => {
     if (!isSubmitting) {
       onClose();

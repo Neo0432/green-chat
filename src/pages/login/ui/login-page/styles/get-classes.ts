@@ -10,6 +10,7 @@ export const getClasses = () => {
   const cnLogo = cn('login-page__logo');
   const cnTitle = cn('login-page__title');
   const cnSubtitle = cn('login-page__subtitle');
+  const cnLink = cn('login-page__link');
 
-  return { cnRoot, cnContent, cnLogo, cnTitle, cnSubtitle };
+  return { cnRoot, cnContent, cnLogo, cnTitle, cnSubtitle, cnLink };
 };

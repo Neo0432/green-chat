@@ -87,7 +87,6 @@ describe('isWebhookUrlError', () => {
 });
 
 describe('error guards used one after another', () => {
-  // Compiles only while each guard narrows no further than its own check: otherwise `error` becomes `never`.
   const classify = (error: unknown) => {
     if (!isGreenApiError(error)) {
       return 'foreign';

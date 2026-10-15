@@ -2,7 +2,6 @@ import { z } from 'zod';
 
 import { normalizePhone } from '@shared/lib';
 
-/** FR-2.4. The output is the normalized phone: digits only, no `+`. */
 export const createChatSchema = z.object({
   phone: z.string().transform((value, context) => {
     const result = normalizePhone(value);

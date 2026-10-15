@@ -46,11 +46,9 @@ export interface ParsedMessageNotification {
   source: MessageSource;
   chatId: string;
   idMessage: string;
-  /** Milliseconds since the epoch. */
   timestamp: number;
   text: string;
   senderName: string | null;
-  /** Digits only. */
   senderPhone: string | null;
 }
 

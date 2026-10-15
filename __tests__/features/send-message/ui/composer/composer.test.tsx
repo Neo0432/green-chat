@@ -31,7 +31,6 @@ const renderComposer = () => {
 const getInput = () => screen.getByRole('textbox', { name: 'Message' });
 const getSendButton = () => screen.getByRole('button', { name: 'Send message' });
 
-/** Waits for the request, so no state is written after the test is over. */
 const waitForSent = (store: ReturnType<typeof renderComposer>['store']) =>
   waitFor(() => {
     expect(selectMessagesByChat(store.getState(), CHAT_ID).every(({ status }) => status === 'sent')).toBe(true);

@@ -5,7 +5,6 @@ import type { Message } from '@entities/chat';
 export type MessageListItem =
   { type: 'date'; key: string; timestamp: number } | { type: 'message'; key: string; message: Message };
 
-/** §7.10: a date separator goes before the first message of every calendar day. */
 export const buildMessageItems = (messages: Message[]) => {
   const items: MessageListItem[] = [];
   let previousTimestamp: number | null = null;

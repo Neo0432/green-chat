@@ -21,7 +21,6 @@ const apiTokenInstanceSchema = z
   .min(1, 'Enter the API token')
   .regex(/^\S+$/, "The token can't contain spaces");
 
-/** `null` stands for "not set": the URL is derived from the instance ID once that is known to be valid. */
 const apiUrlSchema = z
   .string()
   .trim()
@@ -41,7 +40,6 @@ const apiUrlSchema = z
     return z.NEVER;
   });
 
-/** FR-1.2. Every field is validated on its own, so all the errors show at once. */
 export const signInSchema = z
   .object({
     idInstance: idInstanceSchema,

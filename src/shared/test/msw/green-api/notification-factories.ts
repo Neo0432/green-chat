@@ -12,12 +12,10 @@ import {
 
 interface NotificationParams {
   idInstance: string;
-  /** Seconds since the epoch; now by default. */
   timestamp?: number;
 }
 
 interface MessageParams extends NotificationParams {
-  /** The conversation partner: the sender of an incoming message, the recipient of an outgoing one. */
   chatId: string;
   idMessage: string;
   text: string;
@@ -25,9 +23,7 @@ interface MessageParams extends NotificationParams {
 
 interface IncomingMessageParams extends MessageParams {
   senderName: string;
-  /** 0 when the sender hides it. */
   senderPhone?: number;
-  /** Anything but a text type produces a file message that carries `text` as its caption. */
   typeMessage?: string;
 }
 
@@ -102,7 +98,6 @@ export const createIncomingNotification = ({
   messageData: createMessageData(text, typeMessage),
 });
 
-/** Live outgoing semantics: `chatId`/`chatName` are the recipient, `sender*` is our own account. */
 export const createOutgoingNotification = ({
   idInstance,
   chatId,
@@ -153,7 +148,6 @@ export const createStateChangedNotification = ({
   stateInstance,
 });
 
-/** Also the body of the 466 that SendMessage answers with once the quota is gone (requirements §6.1). */
 export const createQuotaExceededNotification = ({ idInstance, timestamp = getNowSeconds() }: NotificationParams) => ({
   ...quotaExceededNotification,
   instanceData: createInstanceData(idInstance),

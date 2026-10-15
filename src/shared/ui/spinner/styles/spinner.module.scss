@@ -12,7 +12,6 @@
 
   animation: spin 700ms linear infinite;
 
-  // Rotation is not vestibular motion, and a frozen arc looks like a hang: slow down instead of stopping.
   @include reduced-motion {
     animation-duration: 1.4s !important;
     animation-iteration-count: infinite !important;

@@ -9,10 +9,6 @@ import { parseEnv } from './src/shared/config/parse-env.ts';
 
 const resolvePath = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
-/**
- * Single source of truth for aliases: read by Vite and Sass alike.
- * Keep tsconfig `paths` and jest.config.ts `moduleNameMapper` in sync.
- */
 const alias = {
   '@app': resolvePath('./src/app'),
   '@pages': resolvePath('./src/pages'),
@@ -24,7 +20,8 @@ const alias = {
 
 const STYLES_ROOT = normalizePath(resolvePath('./src/shared/assets/styles'));
 
-/** The MSW worker script must sit in public/ for the dev server, but it has no business in production. */
+const isStyleHelper = (filename: string) => normalizePath(filename).startsWith(STYLES_ROOT);
+
 const excludeMswWorker = (): Plugin => {
   let workerPath = '';
 
@@ -40,7 +37,6 @@ const excludeMswWorker = (): Plugin => {
   };
 };
 
-/** Fallback for when the GREEN-API host is unreachable or blocked from this network (R12): a same-origin proxy. */
 const createGreenApiProxy = (mode: string): Record<string, ProxyOptions> | undefined => {
   const { greenApiProxyTarget } = parseEnv(loadEnv(mode, process.cwd(), 'VITE_'));
 
@@ -68,14 +64,8 @@ export default defineConfig(({ mode }) => ({
     },
     preprocessorOptions: {
       scss: {
-        /**
-         * Inject the mixins into every scss file except the style helpers
-         * themselves — a repeated `@use ... as *` makes Sass throw.
-         */
         additionalData: (source: string, filename: string) =>
-          normalizePath(filename).startsWith(STYLES_ROOT)
-            ? source
-            : `@use '@shared/assets/styles/mixins/mixins' as *;\n${source}`,
+          isStyleHelper(filename) ? source : `@use '@shared/assets/styles/mixins/mixins' as *;\n${source}`,
       },
     },
   },

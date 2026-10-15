@@ -16,7 +16,6 @@ interface MessageRef {
 
 interface StatusUpdate {
   idMessage: string;
-  /** Where to look first: the notification may name another chat than the one we keep the message in. */
   chatId?: string;
   status: MessageStatus;
   error?: string;
@@ -39,7 +38,6 @@ export const messagesSlice = createSlice({
   reducers: {
     messagesHydrated: (_state, { payload }: PayloadAction<MessagesByChat>) => payload,
     messagesReset: () => initialState,
-    /** FR-3.5: the message is shown before the request is made. */
     outgoingMessageQueued: {
       reducer: (state, { payload }: PayloadAction<Message>) => {
         (state[payload.chatId] ??= []).push(payload);
@@ -57,7 +55,6 @@ export const messagesSlice = createSlice({
         },
       }),
     },
-    /** FR-3.6, FR-4.8 (3) */
     messageSendSucceeded: (state, { payload }: PayloadAction<MessageRef & { idMessage: string }>) => {
       const list = state[payload.chatId];
 
@@ -65,13 +62,11 @@ export const messagesSlice = createSlice({
         state[payload.chatId] = applySendSuccess(list, payload.localId, payload.idMessage);
       }
     },
-    /** A message with an `idMessage` is known to the server, whose word beats our transport error. */
     messageSendFailed: (state, { payload }: PayloadAction<MessageRef & { error: string }>) => {
       updateByLocalId(state[payload.chatId], payload.localId, (message) =>
         message.idMessage === null ? withStatus(message, 'failed', payload.error) : message,
       );
     },
-    /** FR-3.7: the same message keeps its place in the list, but the new send gets a new `idMessage`. */
     messageRetried: (state, { payload }: PayloadAction<MessageRef>) => {
       updateByLocalId(state[payload.chatId], payload.localId, (message) => ({
         ...message,
@@ -80,7 +75,6 @@ export const messagesSlice = createSlice({
         error: null,
       }));
     },
-    /** FR-4.10: found by `idMessage`, in the named chat first and then in all of them. */
     messageStatusUpdated: (state, { payload: { idMessage, chatId, status, error } }: PayloadAction<StatusUpdate>) => {
       const chatIds = chatId === undefined ? Object.keys(state) : [chatId, ...Object.keys(state)];
 
@@ -95,7 +89,6 @@ export const messagesSlice = createSlice({
         }
       }
     },
-    /** FR-4.5, FR-4.6: an incoming message, or one sent from the phone. FR-4.9: a known `idMessage` is a no-op. */
     messageReceived: (state, { payload }: PayloadAction<ReceivedMessage>) => {
       const list = (state[payload.chatId] ??= []);
 
@@ -103,7 +96,6 @@ export const messagesSlice = createSlice({
         list.push(payload);
       }
     },
-    /** FR-4.7: a message sent through the API, by us or by another client. FR-4.9: a known `idMessage` is a no-op. */
     apiMessageReceived: (state, { payload }: PayloadAction<ApiMessage>) => {
       const list = (state[payload.chatId] ??= []);
       const match = matchApiMessage(list, { idMessage: payload.idMessage, text: payload.text, now: Date.now() });
@@ -117,7 +109,6 @@ export const messagesSlice = createSlice({
   },
   selectors: {
     selectAllMessages: (state) => state,
-    /** One stable empty list for a chat without messages, so a component does not re-render for nothing. */
     selectMessagesByChat: (state, chatId: string) => state[chatId] ?? NO_MESSAGES,
     selectLastMessage: (state, chatId: string) => state[chatId]?.at(-1),
     selectHasMessage: (state, chatId: string, idMessage: string) => hasIdMessage(state[chatId], idMessage),

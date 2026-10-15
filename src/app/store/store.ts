@@ -18,7 +18,6 @@ const rootReducer = combineReducers({
 
 type PreloadedState = Partial<ReturnType<typeof rootReducer>>;
 
-/** Without an argument the session is restored from the storage (FR-1.7), and with it the chats. */
 export const createAppStore = (preloadedState: PreloadedState = { session: getInitialSessionState() }) => {
   startSessionPersistence();
 

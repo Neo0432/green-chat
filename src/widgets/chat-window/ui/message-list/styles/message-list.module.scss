@@ -1,5 +1,4 @@
 .message-list {
-  // The bubble tails are wider than the 8px padding of the column on a phone, and must not add a scrollbar.
   overflow: hidden auto;
   display: flex;
   flex: 1;
@@ -7,7 +6,6 @@
 
   min-block-size: 0;
 
-  // The column sits at the bottom while the messages are fewer than the window is tall.
   &__column {
     display: flex;
     flex-direction: column;

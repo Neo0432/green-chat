@@ -52,7 +52,6 @@ const toOutgoingMessage = (notification: ParsedMessageNotification): ApiMessage 
   status: 'sent',
 });
 
-/** FR-4.5 (d)(g): the chat is made on the first message, and a name replaces its placeholder title (FR-2.8). */
 const ensureChat = ({ dispatch, getState }: StoreApi, notification: ParsedMessageNotification) => {
   const { chatId, senderName, senderPhone, timestamp } = notification;
 
@@ -78,7 +77,6 @@ const processMessage = (api: StoreApi, notification: ParsedMessageNotification) 
 
   ensureChat(api, notification);
 
-  // A notification that comes back after a failed delete: the message and the unread count are in already.
   if (selectHasMessage(getState(), chatId, idMessage)) {
     return;
   }
@@ -119,9 +117,6 @@ const processStatus = (
   );
 };
 
-/**
- * FR-4.4 to FR-4.13: routes a notification to the store. What the app does not handle is dropped, never thrown at.
- */
 export const processNotification = (api: StoreApi, idInstance: string, body: unknown) => {
   const notification = parseNotification(body, idInstance);
 

@@ -46,7 +46,6 @@ export const SignInForm = () => {
     }
   };
 
-  // Collapsing means "no custom URL": the value is dropped, so it is neither used nor validated.
   const handleToggleApiUrl = () => {
     if (isApiUrlExpanded) {
       resetField('apiUrl');

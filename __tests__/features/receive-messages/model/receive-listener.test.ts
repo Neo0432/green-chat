@@ -31,7 +31,6 @@ const incoming = (text: string, idMessage: string, chatId = ALICE_CHAT_ID) =>
     timestamp: 1_000,
   });
 
-/** The mock answers through promises and timers, so the test lets both run until the condition holds. */
 const advanceUntil = async (isDone: () => boolean, stepMs = 100, maxSteps = 200) => {
   for (let step = 0; step < maxSteps && !isDone(); step += 1) {
     await jest.advanceTimersByTimeAsync(stepMs);

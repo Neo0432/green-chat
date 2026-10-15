@@ -3,7 +3,6 @@ import { assertNever } from '@shared/lib';
 
 import type { SignInFailure } from '../model/types';
 
-/** FR-1.9 */
 export const FORCED_SIGN_OUT_MESSAGE = 'Your credentials were rejected by GREEN-API. Please sign in again.';
 
 const getInstanceStateMessage = (stateInstance: StateInstance) => {
@@ -61,7 +60,6 @@ const getRequestMessage = ({ errorKind, status, serverMessage }: RequestFailure,
   }
 };
 
-/** The login column of requirements FR-6.2. `apiUrl` is the effective one, so the user sees where the request went. */
 export const getSignInErrorMessage = (failure: SignInFailure, apiUrl: string) => {
   switch (failure.reason) {
     case 'instance-not-authorized':

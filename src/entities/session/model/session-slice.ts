@@ -4,9 +4,7 @@ import type { Credentials, StateInstance } from '@shared/api/green-api';
 
 export interface SessionState {
   credentials: Credentials | null;
-  /** The last known state of the instance; `null` while it is unknown or nobody is signed in. */
   instanceState: StateInstance | null;
-  /** Set when GREEN-API rejected the credentials mid-session: the login screen shows why. */
   forcedSignOut: { idInstance: string } | null;
 }
 
@@ -22,13 +20,11 @@ export const sessionSlice = createSlice({
   reducers: {
     signedIn: (state, action: PayloadAction<Credentials>) => {
       state.credentials = action.payload;
-      // Signing in requires an authorized instance.
       state.instanceState = 'authorized';
       state.forcedSignOut = null;
     },
     signedOut: () => initialSessionState,
     forcedSignOut: (state) => {
-      // A stale request of a finished session must not turn a logout into a forced sign-out.
       if (state.credentials !== null) {
         state.forcedSignOut = { idInstance: state.credentials.idInstance };
         state.credentials = null;

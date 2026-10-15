@@ -12,10 +12,8 @@ interface EndpointContext {
   state: GreenApiMockState;
   scheduler: Scheduler;
   idInstance: string;
-  /** The authenticated instance, with its current `stateInstance`. */
   instance: MockInstance;
   request: Request;
-  /** The trailing path segment of deleteNotification. */
   receiptId: string | undefined;
 }
 
@@ -24,9 +22,7 @@ export type Endpoint = (context: EndpointContext) => Response | Promise<Response
 const NOT_AUTHORIZED_REASON = 'instance is starting or not authorized';
 const MESSAGE_MAX_LENGTH = 4096;
 const SLOW_RESPONSE_MS = 20_000;
-/** The server clamps `receiveTimeout` to 5..60 seconds and takes 5 when it is missing (requirements §6.6). */
 const MIN_RECEIVE_TIMEOUT_S = 5;
-/** In the browser a client abort never reaches the handler, so a short cap bounds an abandoned poll (MK-8). */
 const MAX_MOCK_WAIT_S = 10;
 
 const CHAT_ID_PATTERN = /^-?\d+$/;
@@ -44,7 +40,6 @@ const CHECK_ACCOUNT_QUOTA_BODY = {
   },
 };
 
-/** MK-7: the last digits of the phone pick the response. */
 const CHECK_ACCOUNT_OUTCOMES: readonly { phoneEnding: string; respond: () => Response }[] = [
   { phoneEnding: '0000', respond: () => HttpResponse.json({ exist: false, chatId: '' }) },
   {
@@ -74,12 +69,10 @@ const readJson = async (request: Request): Promise<unknown> => {
 
     return body;
   } catch {
-    // An unreadable body is reported as a validation failure by the caller.
     return undefined;
   }
 };
 
-/** The fields of a JSON object body; `null` when the body is anything else. */
 const readFields = async (request: Request) => {
   const body = await readJson(request);
 
@@ -89,7 +82,6 @@ const readFields = async (request: Request) => {
 const isChatId = (value: unknown): value is string =>
   typeof value === 'string' && (CHAT_ID_PATTERN.test(value) || PHONE_CHAT_ID_PATTERN.test(value));
 
-/** MK-8: the first rejecting `#marker` in the text decides the response. */
 const getMarkerFailure = (state: GreenApiMockState, markers: ReadonlySet<string>, failOnceKey: string) => {
   if (markers.has('#fail')) {
     return failure(500, 'Internal Server Error');
@@ -200,8 +192,6 @@ export const sendMessage: Endpoint = async ({ state, scheduler, idInstance, inst
     startSendEffects({ state, scheduler, idInstance, chatId, idMessage, text: message, markers });
   };
 
-  // The client times out after 15 s and fails the message, so the message may only show up once the 20 s response
-  // is due. The effects run whether or not the client is still there: the message was sent.
   if (markers.has('#slow')) {
     scheduler(startEffects, SLOW_RESPONSE_MS);
 
@@ -227,7 +217,6 @@ export const receiveNotification: Endpoint = async ({ state, idInstance, instanc
     });
   }
 
-  // Going offline cuts a pending poll short, so the app sees the failure at once.
   if (request.signal.aborted || state.isOffline) {
     return HttpResponse.error();
   }

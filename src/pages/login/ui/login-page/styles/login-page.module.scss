@@ -49,4 +49,15 @@
     color: var(--color-text-secondary);
     text-align: center;
   }
+
+  &__link {
+    border-radius: var(--radius-s);
+    color: var(--color-primary-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    @include focus-visible {
+      @include focus-ring;
+    }
+  }
 }

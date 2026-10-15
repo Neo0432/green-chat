@@ -1,12 +1,10 @@
 import type { Config } from 'jest';
 
-/** ESM-only dependencies of MSW: Jest runs CommonJS, so SWC has to transform them. */
-const ESM_PACKAGES = ['rettime', 'until-async', '@open-draft'];
+const MSW_ESM_PACKAGES = ['rettime', 'until-async', '@open-draft'];
 
 const config: Config = {
   // A broken watchman install makes Jest exit 0 without running a single test.
   watchman: false,
-  // Plain jsdom lacks fetch, Response and TextEncoder, which MSW 2 relies on.
   testEnvironment: 'jest-fixed-jsdom',
   // With nextTick and queueMicrotask faked, MSW answers an aborted request with a 500 instead of rejecting the fetch.
   fakeTimers: { doNotFake: ['nextTick', 'queueMicrotask'] },
@@ -24,8 +22,7 @@ const config: Config = {
       },
     ],
   },
-  transformIgnorePatterns: [`/node_modules/(?!(${ESM_PACKAGES.join('|')})/)`],
-  // Mirrors `paths` in tsconfig.json and `alias` in vite.config.ts.
+  transformIgnorePatterns: [`/node_modules/(?!(${MSW_ESM_PACKAGES.join('|')})/)`],
   moduleNameMapper: {
     '^@app/(.*)$': '<rootDir>/src/app/$1',
     '^@pages/(.*)$': '<rootDir>/src/pages/$1',

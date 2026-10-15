@@ -13,7 +13,6 @@ interface MessageListProps {
   chatId: string;
 }
 
-/** Mount it with the chat as its `key`: every chat then opens at its end. */
 export const MessageList = ({ chatId }: MessageListProps) => {
   const messages = useAppSelector((state) => selectMessagesByChat(state, chatId));
   const { scrollRef, handleScroll } = useStickToBottom(messages.at(-1));

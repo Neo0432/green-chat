@@ -7,7 +7,6 @@ export const DEFAULT_TIMEOUT_MS = 15_000;
 
 interface RequestParams {
   method: 'GET' | 'POST' | 'DELETE';
-  /** The GREEN-API method name in lowerCamelCase, e.g. `sendMessage`. */
   endpoint: string;
   suffix?: string;
   query?: Record<string, string | number>;
@@ -51,11 +50,6 @@ const send = async (url: string, init: RequestInit): Promise<RawResponse> => {
   return { status: response.status, isOk: response.ok, text: await response.text() };
 };
 
-/**
- * One call to GREEN-API. Resolves with the parsed JSON body (`null` for an empty one). Transport and
- * server failures reject with a GreenApiError; a bad argument (e.g. an unencodable token) throws as is.
- * Callers validate the payload themselves.
- */
 export const request = async (
   credentials: Credentials,
   params: RequestParams,
@@ -74,7 +68,6 @@ export const request = async (
   try {
     response = await send(url, { ...init, signal });
   } catch {
-    // The original error is dropped on purpose: its message or cause may carry the URL with the token.
     throw new GreenApiError({
       kind: getFailureKind(callerSignal?.aborted === true, timeoutController.signal.aborted),
     });

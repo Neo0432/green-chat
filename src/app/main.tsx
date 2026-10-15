@@ -11,12 +11,8 @@ import { createAppStore } from './store';
 
 import './styles/index.scss';
 
-/**
- * The guard must read the literal `import.meta.env.DEV`: Vite inlines it as `false` in
- * production, so the bundler drops the dynamic import and MSW with it. Any value derived
- * from it (a constant, a property of `ENV`) is not folded and would ship MSW to production.
- */
 const startMocks = async () => {
+  // Keep the literal import.meta.env.DEV: Vite folds only the literal, a constant would ship MSW to production.
   if (!import.meta.env.DEV || !ENV.enableApiMocks) {
     return;
   }

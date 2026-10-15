@@ -9,7 +9,6 @@ interface RetryMessageParams {
   localId: string;
 }
 
-/** FR-3.7: the same message, with the same `localId`, goes out again. A message that is not `failed` is left alone. */
 export const retryMessage = createAppAsyncThunk<void, RetryMessageParams>(
   'send-message/retryMessage',
   async ({ chatId, localId }, thunkApi) => {

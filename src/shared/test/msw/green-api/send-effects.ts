@@ -25,14 +25,9 @@ interface SendEffectsParams {
   chatId: string;
   idMessage: string;
   text: string;
-  /** The `#markers` found in the text (MK-8). */
   markers: ReadonlySet<string>;
 }
 
-/**
- * What a successful SendMessage sets in motion (MK-8): the API message lands in the queue right away, before the
- * HTTP response, and the statuses and the echo follow on the scheduler.
- */
 export const startSendEffects = ({
   state,
   scheduler,

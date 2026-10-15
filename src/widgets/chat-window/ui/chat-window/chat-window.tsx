@@ -18,7 +18,6 @@ export const ChatWindow = () => {
   return (
     <main className={cnRoot}>
       {chat ? (
-        // The key makes every chat start with its own scroll position, draft and focus.
         <Fragment key={chat.chatId}>
           <ChatHeader chat={chat} />
           <MessageList chatId={chat.chatId} />

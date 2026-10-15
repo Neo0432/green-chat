@@ -16,7 +16,6 @@ const setUp = () => {
   return { state, mock: createDevHelpers(state) };
 };
 
-/** The oldest queued notification of the instance, parsed the way the app parses it. */
 const peekParsed = (state: GreenApiMockState, idInstance = PRIMARY_INSTANCE_ID) =>
   parseNotification(state.peek(idInstance)?.body, idInstance);
 

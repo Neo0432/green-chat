@@ -28,7 +28,6 @@ export interface MenuTriggerProps {
 
 export interface MenuProps {
   items: MenuItem[];
-  /** A non-interactive line above the items. */
   caption?: string;
   renderTrigger: (props: MenuTriggerProps) => ReactNode;
   className?: string;
@@ -64,7 +63,6 @@ export const Menu = ({ items, caption, renderTrigger, className }: MenuProps) =>
       return;
     }
 
-    // Capture phase: the menu must still close when another handler stops the click from bubbling.
     const handleClick = (event: MouseEvent) => {
       if (event.target instanceof Node && !rootRef.current?.contains(event.target)) {
         setIsOpen(false);
@@ -86,7 +84,6 @@ export const Menu = ({ items, caption, renderTrigger, className }: MenuProps) =>
     dropdownRef.current?.querySelector<HTMLElement>('[role="menuitem"]')?.focus();
 
     return () => {
-      // Focus falls back to <body> when the focused item is removed. If the user clicked another control, it keeps focus.
       if (document.activeElement === document.body) {
         trigger?.focus();
       }
@@ -95,7 +92,6 @@ export const Menu = ({ items, caption, renderTrigger, className }: MenuProps) =>
 
   const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Escape') {
-      // Handled here, before any document listener, so an enclosing modal does not close with the menu.
       event.preventDefault();
       setIsOpen(false);
 
@@ -119,7 +115,6 @@ export const Menu = ({ items, caption, renderTrigger, className }: MenuProps) =>
   };
 
   const handleSelect = (item: MenuItem) => {
-    // Before the action runs: a dialog it opens must see the trigger, not this item, as the previously focused element.
     triggerRef.current?.focus();
     setIsOpen(false);
     item.onSelect();

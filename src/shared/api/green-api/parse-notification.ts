@@ -20,7 +20,6 @@ const NO_ACCOUNT_DESCRIPTION = 'There is no Telegram account for this recipient'
 const isDeliveryStatus = (value: unknown): value is DeliveryStatus =>
   DELIVERY_STATUSES.some((status) => status === value);
 
-/** `noAccount` is a status of its own in the docs, but for the app it is just another way to fail. */
 const toDeliveryStatus = (status: unknown): DeliveryStatus | null => {
   if (status === 'noAccount') {
     return 'failed';
@@ -31,7 +30,6 @@ const toDeliveryStatus = (status: unknown): DeliveryStatus | null => {
 
 const getFirstNonBlank = (...candidates: unknown[]) => candidates.find(isNonBlankString)?.trim() ?? null;
 
-/** A notification without `instanceData.idInstance` is accepted: only a mismatch proves it belongs to someone else. */
 const isForInstance = ({ instanceData }: Body, idInstance: string) => {
   if (instanceData === undefined) {
     return true;
@@ -94,7 +92,6 @@ const parseMessage = (body: Body, source: MessageSource): ParsedMessageNotificat
     return null;
   }
 
-  // In outgoing notifications `sender*` is our own account and `chatName` is the recipient (live docs).
   const isIncoming = source === 'incoming';
 
   return {
@@ -111,7 +108,6 @@ const parseMessage = (body: Body, source: MessageSource): ParsedMessageNotificat
   };
 };
 
-/** The live `failed` and `noAccount` examples have no `idMessage`: with nothing to match, they are ignored. */
 const parseStatus = ({ idMessage, status, chatId, description }: Body): ParsedStatusNotification | null => {
   const deliveryStatus = toDeliveryStatus(status);
 
@@ -136,10 +132,6 @@ const parseQuota = ({ quotaData }: Body): ParsedQuotaNotification => ({
   description: isPlainObject(quotaData) ? getFirstNonBlank(quotaData.description) : null,
 });
 
-/**
- * Turns a raw notification body into one of the handled shapes. Everything the app does not handle
- * (other instance, groups, non-text, unknown types, malformed data) yields `null`: never a throw.
- */
 export const parseNotification = (body: unknown, idInstance: string): ParsedNotification | null => {
   if (!isPlainObject(body) || !isForInstance(body, idInstance)) {
     return null;

@@ -2,7 +2,6 @@ import { parseNotification } from '@shared/api/green-api';
 
 import { type GreenApiMockState, PRIMARY_INSTANCE_ID } from './msw/green-api';
 
-/** Takes every notification out of the instance's queue and returns them parsed, as the app would see them. */
 export const drainNotifications = (state: GreenApiMockState, idInstance = PRIMARY_INSTANCE_ID) => {
   const parsed = [];
 

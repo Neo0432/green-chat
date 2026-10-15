@@ -29,7 +29,6 @@ const ModalDialog = ({ onClose, title, children, footer, className }: ModalDialo
   const dialogRef = useRef<HTMLDivElement>(null);
   const isPressedInsideRef = useRef(false);
   const titleId = useId();
-  // Read during render: the children's effects run before this component's and may already have moved the focus.
   const [opener] = useState(() => document.activeElement);
   const handleClose = useEffectEvent(onClose);
   const { cnBackdrop, cnDialog, cnTitle, cnBody, cnFooter } = getClasses({ className });
@@ -42,7 +41,6 @@ const ModalDialog = ({ onClose, title, children, footer, className }: ModalDialo
     }
 
     return () => {
-      // Focus is on <body> when the focused element was inside the dialog. Focus a consumer moved elsewhere stays there.
       if (opener instanceof HTMLElement && document.activeElement === document.body) {
         opener.focus();
       }
@@ -90,7 +88,6 @@ const ModalDialog = ({ onClose, title, children, footer, className }: ModalDialo
     isPressedInsideRef.current = event.target !== event.currentTarget;
   };
 
-  // A text selection dragged from the dialog onto the backdrop also ends in a click on the backdrop.
   const handleClick = (event: MouseEvent) => {
     if (event.target === event.currentTarget && !isPressedInsideRef.current) {
       onClose();

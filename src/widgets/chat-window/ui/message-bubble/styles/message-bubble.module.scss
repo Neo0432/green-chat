@@ -17,7 +17,6 @@
   background-color: var(--_background);
   box-shadow: var(--shadow-bubble);
 
-  // The tail: a square beside the bottom corner, with a quarter circle cut out of its top.
   &::after {
     content: '';
 
@@ -56,7 +55,6 @@
     white-space: pre-wrap;
   }
 
-  // Floated after the text: it shares the last line when there is room, and otherwise starts a new one.
   &__meta {
     @include caption-12-16-regular-normal;
 
@@ -76,16 +74,17 @@
   }
 
   &__retry {
+    --_touch-target-outset: -12px;
+
     position: relative;
     display: flex;
     flex-shrink: 0;
     color: var(--color-danger);
 
-    // The 16px icon stays, its touch target grows to 40px (§7.13).
     &::before {
       content: '';
       position: absolute;
-      inset: -12px;
+      inset: var(--_touch-target-outset);
     }
   }
 }

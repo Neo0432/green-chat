@@ -14,7 +14,6 @@ import { server } from '@shared/test/msw/server';
 
 import { buildChat } from '../../../entities/chat/fixtures';
 
-/** The mock answers a phone with the chat id `10000000 + <last 7 digits>` (MK-7). */
 const PHONE = '79001234567';
 const CHAT_ID = '11234567';
 

@@ -203,7 +203,6 @@ describe('messages slice', () => {
     it('drops the copy that the API notification made first (FR-4.8 (3))', () => {
       const queued = queue();
       const { localId } = queued.payload;
-      // The notification arrives after the local message was failed by the timeout, and takes its place as a copy.
       const state = reduce(
         undefined,
         queued,
@@ -228,7 +227,6 @@ describe('messages slice', () => {
       jest.useRealTimers();
     });
 
-    /** `n2` is the notification of the third send, `r2` is the response to it. */
     const dispatchEvent = (state: MessagesState, event: string, queued: ReturnType<typeof queue>[]) => {
       const index = Number(event.slice(1));
 

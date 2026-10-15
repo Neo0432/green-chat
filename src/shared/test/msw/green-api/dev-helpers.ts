@@ -11,21 +11,16 @@ import {
 
 interface IncomingOptions {
   senderName?: string;
-  /** Anything but a text type queues a file message, which the app ignores. */
   typeMessage?: string;
 }
 
-/** MK-10: console helpers that write to the queue of the instance that talked to the mock last. */
 interface GreenChatMock {
   incoming: (chatIdOrPhone: string, text: string, options?: IncomingOptions) => void;
-  /** A message sent from the phone, or from another Telegram client. */
   fromPhone: (chatIdOrPhone: string, text: string) => void;
-  /** Changes what getStateInstance answers and queues a `stateInstanceChanged`. */
   setState: (stateInstance: StateInstance) => void;
   quota: () => void;
   raw: (body: unknown) => void;
   queue: () => number;
-  /** While on, every request fails with a network error. Unlike the devtools "Offline", it works with the mock. */
   offline: (isOffline: boolean) => void;
 }
 
@@ -35,7 +30,6 @@ declare global {
   }
 }
 
-/** A negative ID or up to 8 digits is a chat ID (the ones the mock makes have 8). Anything else is a phone number. */
 const CHAT_ID_INPUT_PATTERN = /^(-\d+|\d{1,8})$/;
 
 const resolveChatId = (state: GreenApiMockState, chatIdOrPhone: string) => {

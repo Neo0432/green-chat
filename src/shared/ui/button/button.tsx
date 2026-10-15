@@ -8,7 +8,6 @@ import type { ButtonVariant } from './constants';
 export interface ButtonProps extends ComponentPropsWithRef<'button'> {
   variant?: ButtonVariant;
   isLoading?: boolean;
-  /** Replaces the children while loading, e.g. "Please wait…". */
   loadingText?: string;
   isFullWidth?: boolean;
 }

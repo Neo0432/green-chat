@@ -5,7 +5,6 @@ import { Spinner } from '@shared/ui/spinner';
 
 import { getClasses } from './styles/get-classes';
 
-/** §7.4: "Connecting…" while the polling cannot reach GREEN-API, otherwise what keeps messages from coming. */
 export const StatusStrip = () => {
   const isConnecting = useAppSelector(selectIsConnecting);
   const error = useAppSelector(selectStatusError);

@@ -8,14 +8,12 @@ interface DeleteNotificationParams {
   receiptId: number;
 }
 
-/** The server fails with a 500 when the notification to delete is already gone. */
 const isNotificationGoneError = (error: unknown) =>
   isGreenApiError(error) &&
   error.kind === 'http' &&
   error.status === 500 &&
   /findUnAckedMessage/i.test(error.serverMessage ?? '');
 
-/** `result: false` means the notification was not deleted because it is already gone. */
 export const deleteNotification = async (
   credentials: Credentials,
   { receiptId }: DeleteNotificationParams,

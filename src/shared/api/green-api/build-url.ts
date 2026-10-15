@@ -7,7 +7,6 @@ interface BuildUrlParams {
   query?: Record<string, string | number>;
 }
 
-/** `{base}/waInstance{id}/{method}/{token}[/{suffix}][?query]`; the base is the same-origin proxy when it is configured. */
 export const buildUrl = (
   { idInstance, apiTokenInstance, apiUrl }: Credentials,
   method: string,

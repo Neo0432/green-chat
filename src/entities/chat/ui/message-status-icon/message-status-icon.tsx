@@ -4,7 +4,6 @@ import { SvgAlertCircle, SvgCheck, SvgCheckDouble, SvgClock, type SvgIconProps }
 
 import type { MessageStatus } from '../../model/types';
 
-/** FR-3.8: `delivered` has no icon of its own, Telegram has no real "delivered". */
 const STATUS_ICONS = {
   pending: SvgClock,
   sent: SvgCheck,
@@ -18,7 +17,6 @@ interface MessageStatusIconProps {
   className?: string;
 }
 
-/** Draws in `currentColor`: the consumer picks the color. */
 export const MessageStatusIcon = ({ status, className }: MessageStatusIconProps) => {
   const Icon = STATUS_ICONS[status];
 

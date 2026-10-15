@@ -39,7 +39,6 @@
   clip-path: inset(100%);
 }
 
-// The white-on-dark label that sits on the wallpaper: the date separator and the empty states.
 @mixin wallpaper-pill {
   @include body-15-20-medium-normal;
 

@@ -1,4 +1,3 @@
-/** jsdom has no `ResizeObserver`. `resize` tells every observer that is watching, like an element that changed size. */
 export const mockResizeObserver = () => {
   const watchers = new Set<FakeResizeObserver>();
 

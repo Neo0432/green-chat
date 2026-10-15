@@ -5,7 +5,6 @@ const envSchema = z.object({
     .enum(['true', 'false'])
     .default('false')
     .transform((value) => value === 'true'),
-  // An empty value in .env means "not set".
   VITE_GREEN_API_PROXY_TARGET: z.preprocess(
     (value) => (value === '' ? undefined : value),
     z.url({ protocol: /^https?$/ }).optional(),

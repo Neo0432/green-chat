@@ -32,6 +32,8 @@
   }
 
   &__input {
+    --_line-height: 21px;
+
     @include body-16-21-regular-normal;
 
     resize: none;
@@ -42,9 +44,7 @@
     min-inline-size: 0;
     min-block-size: var(--round-button-size);
     max-block-size: 200px;
-
-    // Centers one line of text (21px, as in the typography mixin) in the height of the send button.
-    padding: calc((var(--round-button-size) - 21px) / 2) var(--space-4);
+    padding: calc((var(--round-button-size) - var(--_line-height)) / 2) var(--space-4);
     border: 0;
     border-radius: var(--radius);
 

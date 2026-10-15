@@ -12,19 +12,13 @@ import prettier from 'eslint-config-prettier/flat';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-/** FSD layers, bottom-up. Order matters for both boundaries and import sorting. */
-const LAYERS = ['shared', 'entities', 'features', 'widgets', 'pages', 'app'];
+const LAYERS_BOTTOM_UP = ['shared', 'entities', 'features', 'widgets', 'pages', 'app'];
 
-/** Layers split into slices: only index.ts is exposed to the outside. */
 const SLICED_LAYERS = ['entities', 'features', 'widgets', 'pages'];
 
-/**
- * A layer may only depend on layers strictly below it.
- * `shared` and `app` additionally allow imports within themselves —
- * every other layer cannot see its siblings on the same level.
- */
-const layerPolicies = LAYERS.map((layer, index) => {
-  const allowedTypes = layer === 'shared' || layer === 'app' ? LAYERS.slice(0, index + 1) : LAYERS.slice(0, index);
+const layerPolicies = LAYERS_BOTTOM_UP.map((layer, index) => {
+  const allowedTypes =
+    layer === 'shared' || layer === 'app' ? LAYERS_BOTTOM_UP.slice(0, index + 1) : LAYERS_BOTTOM_UP.slice(0, index);
 
   return {
     from: { element: { type: layer } },
@@ -32,7 +26,6 @@ const layerPolicies = LAYERS.map((layer, index) => {
   };
 });
 
-/** Reaching into another slice past its public API is forbidden. */
 const entryPointPolicy = {
   disallow: {
     to: {
@@ -44,7 +37,6 @@ const entryPointPolicy = {
 export default defineConfig([
   globalIgnores(['dist', 'coverage', 'node_modules', 'public/mockServiceWorker.js']),
 
-  // ───────────────────────── Base for every TS/TSX file ─────────────────────────
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -66,22 +58,21 @@ export default defineConfig([
       'unused-imports': unusedImports,
     },
     rules: {
-      // --- Imports ---
       'simple-import-sort/imports': [
         'error',
         {
           groups: [
-            ['^\\u0000'], // side-effect imports
-            ['^node:', '^react$', '^react-dom', '^@?\\w'], // external packages
+            ['^\\u0000'],
+            ['^node:', '^react$', '^react-dom', '^@?\\w'],
             ['^@app(/.*)?$'],
             ['^@pages(/.*)?$'],
             ['^@widgets(/.*)?$'],
             ['^@features(/.*)?$'],
             ['^@entities(/.*)?$'],
             ['^@shared(/.*)?$'],
-            ['^\\.\\.(?!/?$)', '^\\.\\./?$'], // up the tree
-            ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'], // siblings
-            ['^.+\\.s?css$'], // styles last
+            ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
+            ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+            ['^.+\\.s?css$'],
           ],
         },
       ],
@@ -90,7 +81,6 @@ export default defineConfig([
       '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
       '@typescript-eslint/no-import-type-side-effects': 'error',
 
-      // --- Types ---
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
@@ -101,20 +91,14 @@ export default defineConfig([
       '@typescript-eslint/no-unnecessary-condition': 'warn',
       '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
 
-      // --- Async: where 80% of real bugs live ---
       '@typescript-eslint/no-floating-promises': 'error',
-      '@typescript-eslint/no-misused-promises': [
-        'error',
-        { checksVoidReturn: { attributes: false } }, // onClick={async () => …} is fine
-      ],
+      '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: { attributes: false } }],
       '@typescript-eslint/await-thenable': 'error',
       '@typescript-eslint/require-await': 'error',
       '@typescript-eslint/return-await': ['error', 'in-try-catch'],
 
-      // --- React ---
       'react-hooks/exhaustive-deps': 'error',
 
-      // --- General hygiene ---
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       eqeqeq: ['error', 'always', { null: 'ignore' }],
       'prefer-const': 'error',
@@ -123,18 +107,12 @@ export default defineConfig([
     },
   },
 
-  // ───────────────────────── FSD layer boundaries (src only) ─────────────────────────
   {
     files: ['src/**/*.{ts,tsx}'],
     plugins: { boundaries },
     settings: {
       'boundaries/include': ['src/**/*'],
-      // The pattern describes the element ROOT; everything inside belongs to it.
-      // A pattern like 'src/pages/*/**/*' matches no element at all, and the
-      // rule then silently lets every violation through.
-      //
-      // partialMatch: false anchors every pattern to the project root. The
-      // default matches path suffixes, so a nested `app` folder would be claimed too.
+      // Patterns name the element root: 'src/pages/*/**/*' matches nothing and the rule silently passes every violation.
       'boundaries/elements': [
         { type: 'app', pattern: 'src/app', partialMatch: false },
         { type: 'pages', pattern: 'src/pages/*', capture: ['slice'], partialMatch: false },
@@ -152,13 +130,11 @@ export default defineConfig([
     },
   },
 
-  // ───────────────────────── React Fast Refresh ─────────────────────────
   {
     files: ['src/**/*.tsx'],
     extends: [reactRefresh.configs.vite],
   },
 
-  // ───────────────────────── Tests ─────────────────────────
   {
     files: ['__tests__/**/*.{ts,tsx}', 'src/shared/test/**/*.{ts,tsx}'],
     extends: [jest.configs['flat/recommended'], testingLibrary.configs['flat/react']],
@@ -168,7 +144,6 @@ export default defineConfig([
     },
   },
 
-  // ───────────────────────── Root-level config files ─────────────────────────
   {
     files: ['*.{js,ts}'],
     languageOptions: { globals: globals.node },
@@ -178,6 +153,5 @@ export default defineConfig([
     extends: [js.configs.recommended],
   },
 
-  // Prettier turns off every stylistic rule — must stay last
   prettier,
 ]);

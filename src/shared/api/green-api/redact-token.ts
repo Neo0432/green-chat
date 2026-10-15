@@ -1,6 +1,5 @@
 const REDACTED = '***';
 
-/** Replaces the token, raw and URL-encoded (the form it takes inside a request path), with `***`. */
 export const redactToken = (text: string, token: string) => {
   if (token === '') {
     return text;

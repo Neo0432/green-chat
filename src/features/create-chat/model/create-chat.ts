@@ -7,10 +7,6 @@ import { createAppAsyncThunk } from '@shared/lib/redux';
 
 import type { CreateChatResult } from './types';
 
-/**
- * Opens the chat of a normalized phone (FR-2.5, FR-2.6). A known phone costs no request, because the free tariff
- * allows only 100 checks a month. An expected failure is a result, not a rejection.
- */
 export const createChat = createAppAsyncThunk<CreateChatResult, string>(
   'create-chat/createChat',
   async (phone, { dispatch, getState }) => {
@@ -58,7 +54,6 @@ export const createChat = createAppAsyncThunk<CreateChatResult, string>(
       return { ok: false, failure: { reason: 'unavailable', serverReason: account.reason } };
     }
 
-    // The session ended during the request: its chats are gone, and a new one must not land in the next session.
     if (selectCredentials(getState()) !== credentials) {
       return { ok: true };
     }

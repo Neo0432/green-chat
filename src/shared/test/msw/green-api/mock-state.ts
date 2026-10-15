@@ -3,7 +3,6 @@ import type { StateInstance } from '@shared/api/green-api';
 import { MOCK_INSTANCES, type MockInstance, PRIMARY_INSTANCE_ID } from './mock-instances';
 import { sleep } from './sleep';
 
-/** Notification bodies per instance ID, in queue order. */
 export type GreenApiSeed = Readonly<Record<string, readonly unknown[]>>;
 
 interface QueuedNotification {
@@ -22,29 +21,20 @@ interface Waiter {
 }
 
 export interface GreenApiMockState {
-  /** The instance that talked to the mock last: the dev helpers write to its queue. */
   readonly activeInstance: string;
   setActiveInstance: (idInstance: string) => void;
   readonly isOffline: boolean;
   setOffline: (isOffline: boolean) => void;
-  /** The instance with its `stateInstance` override applied; `undefined` for an ID the mock does not know. */
   getInstance: (idInstance: string) => MockInstance | undefined;
   setStateInstance: (idInstance: string, stateInstance: StateInstance) => void;
-  /** Appends to the instance's queue and wakes its pending long polls. Returns the new receipt ID. */
   enqueue: (idInstance: string, body: unknown) => number;
-  /** The head of the queue; it stays there until it is acknowledged. */
   peek: (idInstance: string) => QueuedNotification | undefined;
-  /** Removes the head when its receipt ID matches. */
   acknowledge: (idInstance: string, receiptId: number) => boolean;
   getQueueLength: (idInstance: string) => number;
-  /** Resolves when the instance gets a notification, the mock goes offline, the time is up or the signal aborts. */
   waitForNotification: (idInstance: string, options: WaitOptions) => Promise<void>;
-  /** The deterministic `chatId` of a phone (MK-7). The pair is remembered. */
   registerPhone: (phone: string) => string;
   getPhone: (chatId: string) => string | null;
-  /** `true` the first time a key is seen: `#fail-once` fails exactly that attempt. */
   consumeFailOnce: (key: string) => boolean;
-  /** A unique 19-digit `idMessage`: the time in milliseconds plus a counter. */
   createMessageId: () => string;
 }
 

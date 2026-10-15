@@ -5,10 +5,6 @@ import { createAppAsyncThunk } from '@shared/lib/redux';
 
 import type { SignInResult } from './types';
 
-/**
- * Signs in only when the instance is authorized (FR-1.4). An expected failure is a result, not a rejection, and the
- * progress is not kept in Redux: the form knows it from `formState.isSubmitting`.
- */
 export const signIn = createAppAsyncThunk<SignInResult, Credentials>(
   'sign-in/signIn',
   async (credentials, { dispatch }) => {

@@ -1,4 +1,3 @@
-/** Resolves `true` after `ms`, or `false` as soon as the signal aborts. Either way no timer or listener is left behind. */
 export const sleep = (ms: number, signal: AbortSignal) => {
   if (signal.aborted) {
     return Promise.resolve(false);

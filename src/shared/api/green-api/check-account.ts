@@ -7,14 +7,11 @@ import { toServerMessage } from './server-message';
 import type { CheckAccountResult, Credentials, RequestOptions } from './types';
 
 interface CheckAccountParams {
-  /** International format, digits only (no `+`). */
   phoneNumber: string;
 }
 
-/** 15 digits stay below Number.MAX_SAFE_INTEGER, so the integer on the wire is exact. */
-const PHONE_NUMBER_PATTERN = /^\d{1,15}$/;
+const SAFE_INTEGER_PHONE_PATTERN = /^\d{1,15}$/;
 
-/** A rate limit comes as HTTP 200 with the reason nested in `data`; other failures carry it at the top level. */
 const readReason = (data: Record<string, unknown>) => {
   const nestedReason = isPlainObject(data.data) ? data.data.reason : undefined;
 
@@ -46,11 +43,10 @@ export const checkAccount = async (
   { phoneNumber }: CheckAccountParams,
   options?: RequestOptions,
 ): Promise<CheckAccountResult> => {
-  if (!PHONE_NUMBER_PATTERN.test(phoneNumber)) {
+  if (!SAFE_INTEGER_PHONE_PATTERN.test(phoneNumber)) {
     throw new RangeError('checkAccount expects a phone number of 1 to 15 digits');
   }
 
-  // GREEN-API wants the phone as an integer: a string fails its validation.
   const body = { phoneNumber: Number(phoneNumber) };
   const result = parseResponse(
     await request(credentials, { method: 'POST', endpoint: 'checkAccount', body }, options),

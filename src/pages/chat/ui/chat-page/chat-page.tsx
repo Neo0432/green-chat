@@ -8,7 +8,6 @@ import { useAppSelector } from '@shared/lib/redux';
 
 import { getClasses } from './styles/get-classes';
 
-/** §7.3: two columns, or on a phone one of them: the chat when there is an active one, the list otherwise. */
 export const ChatPage = () => {
   const isMobile = useMediaQuery(MOBILE_MEDIA_QUERY);
   const activeChatId = useAppSelector(selectActiveChatId);

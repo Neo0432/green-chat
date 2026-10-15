@@ -1,6 +1,5 @@
 import type { StateInstance } from '@shared/api/green-api';
 
-/** FR-6.2: the receive loop column. `null` while the instance is fine, or its state is not known yet. */
 export const getInstanceStateMessage = (stateInstance: StateInstance | null) => {
   switch (stateInstance) {
     case null:

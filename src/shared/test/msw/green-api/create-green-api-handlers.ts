@@ -14,12 +14,10 @@ import { type Scheduler, timerScheduler } from './send-effects';
 import { sleep } from './sleep';
 
 export interface GreenApiHandlersOptions {
-  /** Artificial delay of every call but receiveNotification, which waits on its own (MK-5). A range is drawn at random. */
   latencyMs: number | { min: number; max: number };
   scheduler?: Scheduler;
 }
 
-/** Keyed by HTTP method and lowercased endpoint name: GREEN-API method names are case-insensitive (requirements §6.1). */
 const ENDPOINTS = new Map<string, Endpoint>([
   ['GET getstateinstance', getStateInstance],
   ['POST checkaccount', checkAccount],
@@ -30,10 +28,6 @@ const ENDPOINTS = new Map<string, Endpoint>([
 
 const HOST_PATTERN = /^(\d{4})\.api\.green-api\.com$/;
 
-/**
- * A `NNNN.api.green-api.com` host serves only the instances whose ID starts with `NNNN`. For any other one it
- * answers 403 without CORS headers, which a browser reports as a network error (requirements §6.1).
- */
 const isForeignInstance = (url: URL, idInstance: string) => {
   const hostPrefix = HOST_PATTERN.exec(url.hostname)?.[1];
 
@@ -49,10 +43,6 @@ const readParam = (params: PathParams, name: string) => {
 const pickLatencyMs = (latencyMs: GreenApiHandlersOptions['latencyMs']) =>
   typeof latencyMs === 'number' ? latencyMs : latencyMs.min + Math.random() * (latencyMs.max - latencyMs.min);
 
-/**
- * Handlers for every GREEN-API call of the app (MK-2): any origin, any path prefix (the `/green-api` dev proxy),
- * any letter case of the method name.
- */
 export const createGreenApiHandlers = (
   state: GreenApiMockState,
   { latencyMs, scheduler = timerScheduler }: GreenApiHandlersOptions,

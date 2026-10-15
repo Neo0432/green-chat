@@ -5,7 +5,6 @@ interface ScheduledCall {
   delayMs: number;
 }
 
-/** A mock `Scheduler` that only records, so a test decides when (and whether) the scheduled effects run. */
 export const createRecordingScheduler = () => {
   const scheduled: ScheduledCall[] = [];
   const scheduler: Scheduler = (callback, delayMs) => {

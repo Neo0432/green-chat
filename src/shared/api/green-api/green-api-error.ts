@@ -47,7 +47,6 @@ export const isGreenApiError = (error: unknown): error is GreenApiError => error
 
 type HttpError<Status extends number> = GreenApiError & { kind: 'http'; status: Status };
 
-// Typed as narrow as the check: a wider guard makes the else branch of a chain narrow a GreenApiError to `never`.
 const isHttpError = <Status extends number>(error: unknown, status: Status): error is HttpError<Status> =>
   isGreenApiError(error) && error.kind === 'http' && error.status === status;
 

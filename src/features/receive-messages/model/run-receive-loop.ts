@@ -37,7 +37,6 @@ export const runReceiveLoop = async (
 ) => {
   let failureCount = 0;
 
-  // A function call, so that TypeScript does not take `signal.aborted` for false for the whole loop.
   const isAborted = () => signal.aborted;
 
   const waitOutMinInterval = (startedAt: number) => sleep(MIN_POLL_INTERVAL_MS - (Date.now() - startedAt), signal);

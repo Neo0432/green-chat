@@ -1,0 +1,16 @@
+services:
+  web:
+    build:
+      context: .
+      target: runtime
+    ports:
+      - '8080:80'
+
+  mock:
+    build:
+      context: .
+      target: dev
+    environment:
+      VITE_ENABLE_API_MOCKS: 'true'
+    ports:
+      - '3000:3000'

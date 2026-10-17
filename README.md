@@ -6,6 +6,8 @@
 Отправка идёт через `SendMessage`, входящие забираются long polling'ом через HTTP API
 (`ReceiveNotification` → `DeleteNotification`).
 
+Живая версия: https://neo0432.github.io/green-chat/
+
 ## Запуск
 
 Нужны Node 24 и Yarn 1.
@@ -45,6 +47,12 @@ VITE_ENABLE_API_MOCKS=true
 docker compose up web    # прод-сборка на nginx, http://localhost:8080
 docker compose up mock   # dev-сервер в мок-режиме, http://localhost:3000
 ```
+
+### Деплой
+
+Пуш в `main` собирает проект и выкладывает его на GitHub Pages: https://neo0432.github.io/green-chat/. Перед деплоем
+workflow прогоняет линтеры и тесты (`.github/workflows/deploy.yml`). Мок-режима в прод-сборке нет, так что на сайте
+нужен настоящий инстанс.
 
 ### Скрипты
 

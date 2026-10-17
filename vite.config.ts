@@ -54,6 +54,8 @@ const createGreenApiProxy = (mode: string): Record<string, ProxyOptions> | undef
 };
 
 export default defineConfig(({ mode }) => ({
+  base: './',
+
   plugins: [react(), excludeMswWorker()],
 
   resolve: { alias },

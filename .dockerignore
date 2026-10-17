@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+docs
+.git
+.husky/_
+.claude
+.idea
+.vscode
+*.log
+.env.*.local
+.env.local

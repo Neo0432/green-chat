@@ -14,5 +14,3 @@ services:
       VITE_ENABLE_API_MOCKS: 'true'
     ports:
       - '3000:3000'
-    profiles:
-      - mock
